@@ -1,0 +1,22 @@
+{
+  "name": "noted",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install": "(cd frontend && npm i) && (cd backend && npm i)",
+    "start": "concurrently \"cd frontend && npm start -p 3000\" \"cd backend && npm start -p 3001\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dylanlcornelius/Noted.git"
+  },
+  "author": "Dylan Cornelius",
+  "bugs": {
+    "url": "https://github.com/dylanlcornelius/Noted/issues"
+  },
+  "homepage": "https://github.com/dylanlcornelius/Noted#readme",
+  "dependencies": {
+    "concurrently": "^4.1.2"
+  }
+}
