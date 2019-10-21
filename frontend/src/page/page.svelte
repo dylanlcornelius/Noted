@@ -57,16 +57,27 @@
 
 <style>
     .page {
-        border: 2px solid #3b5469;
         padding: 10px;
         margin: 10px;
-        display: inline-grid;
+        display: grid;
     }
     .title {
         font-size: 18px;
         display: flex;
         justify-content: center;
         margin-bottom: 15px;
+    }
+    .todo-input {
+        background: none;
+        border: none;
+        color: white;
+    }
+    .todo-input:focus {
+        outline: none;
+    }
+    .todo-input::placeholder {
+        color: white;
+        opacity: 0.6;
     }
     .row-container {
         display: flex;
@@ -77,21 +88,28 @@
         border-top: 1px solid #505b66;
     }
     button {
-        background-color: white;
-        appearance: none;
+        min-width: 60px;
+        border: none;
+        border-radius: 1px;
+        background: none;
+        white-space: nowrap;
+        color: #eee;
     }
-    button:focus {
-        outline: none;
+    button:hover {
+        color: #aaa;
     }
     .active {
-        background: lightskyblue;
+        background: #12a0f2;
+    }
+    .active:hover {
+        color: #444;
     }
 </style>
 
 <div class="page">
     <div class="title">{title}</div>
     {#if type === 'TODO'}
-        <input type="text" placeholder="Add new item..." bind:value={newNote} on:keydown={addNote}/>
+        <input class="todo-input" type="text" placeholder="Add new item..." bind:value={newNote} on:keydown={addNote}/>
     {/if}
 
     <div>
