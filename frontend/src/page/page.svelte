@@ -1,5 +1,6 @@
 <script>
     import Note from '../note/note.svelte';
+    import Input from '../util/input.svelte';
 
     export let title = 'hey';
     export let notes = [];
@@ -16,16 +17,14 @@
             : notes.filter(ntoe => !notes.compeleted);
 
     function addNote(event) {
-        if (event.key === 'Enter') {
-            notes = [...notes, {
-                id: notes.length,
-                content: newNote,
-                completed: false,
-                order: notes.length
-            }];
+        notes = [...notes, {
+            id: notes.length,
+            content: newNote,
+            completed: false,
+            order: notes.length
+        }];
 
-            newNote = '';
-        }
+        newNote = '';
     }
 
     function checkAllNotes(event) {
@@ -51,8 +50,6 @@
             ...notes.slice(noteIndex + 1)
         ]
     }
-
-    
 </script>
 
 <style>
@@ -66,18 +63,6 @@
         display: flex;
         justify-content: center;
         margin-bottom: 15px;
-    }
-    .todo-input {
-        background: none;
-        border: none;
-        color: white;
-    }
-    .todo-input:focus {
-        outline: none;
-    }
-    .todo-input::placeholder {
-        color: white;
-        opacity: 0.6;
     }
     .row-container {
         display: flex;
@@ -109,7 +94,7 @@
 <div class="page">
     <div class="title">{title}</div>
     {#if type === 'TODO'}
-        <input class="todo-input" type="text" placeholder="Add new item..." bind:value={newNote} on:keydown={addNote}/>
+        <Input placeholder="Add new item..." bind:value={newNote} on:add={addNote}/>
     {/if}
 
     <div>

@@ -1,5 +1,7 @@
 <script>
     import { createEventDispatcher } from 'svelte';
+    import MdClose from 'svelte-icons/md/MdClose.svelte';
+    import Button from '../util/button.svelte';
     import Checkbox from '../util/checkbox.svelte';
 
     export let id;
@@ -44,8 +46,8 @@
         {content}
     </div>
     {#if type === 'TODO'}
-        <div on:click={deleteNote}>
-            x
-        </div>
+        <Button on:click={deleteNote}>
+            <div class="icon"><MdClose/></div>
+        </Button>
     {/if}
 </div>
