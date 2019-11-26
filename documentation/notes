@@ -1,0 +1,20 @@
+user:
+    get
+    post
+    *put
+
+*book:
+    ^get
+    post
+    put
+    ^delete
+
+page:
+    post
+    put
+    ^delete
+
+note:
+    post
+    put
+    delete
