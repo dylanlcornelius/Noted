@@ -20,16 +20,19 @@
         white-space: nowrap;
         color: #eee;
         text-align: start;
-    }
-    .button:hover {
-        color: #aaa;
+        margin: 0;
     }
     .selected {
 		background-color: #12a0f2;
 	}
-    .selected:hover {
-        color: #444;
-    }
+    @media only screen and (min-width: 768px) {
+		.button:hover {
+            color: #aaa;
+        }
+        .selected:hover {
+            color: #444;
+        }
+	}
     
     :global(.icon) {
         height: 15px;

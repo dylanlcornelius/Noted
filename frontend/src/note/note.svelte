@@ -1,8 +1,10 @@
 <script>
     import { createEventDispatcher } from 'svelte';
     import MdClose from 'svelte-icons/md/MdClose.svelte';
+    import MdDragHandle from 'svelte-icons/md/MdDragHandle.svelte';
     import Button from '../util/button.svelte';
     import Checkbox from '../util/checkbox.svelte';
+    import TextBox from '../util/text-box.svelte';
 
     export let id;
     export let content;
@@ -27,10 +29,14 @@
 <style>
     .note {
         display: flex;
-        align-items: cetner;
+        align-items: center;
         justify-content: space-between;
         animation-duration: 0.3s;
         margin-bottom: 15px;
+    }
+    .content-container {
+        display: flex;
+        width: 100%;
     }
     .completed {
         text-decoration: line-through;
@@ -39,15 +45,21 @@
 </style>
 
 <div class="note">
-    <div class:completed={completed}>
+    <div class="content-container" class:completed={completed}>
         {#if type === 'TODO'}
             <Checkbox bind:value={completed} on:toggle={toggleComplete}/>
         {/if}
-        {content}
+        <TextBox content={content}/>
     </div>
     {#if type === 'TODO'}
-        <Button on:click={deleteNote}>
-            <div class="icon"><MdClose/></div>
-        </Button>
+        <div style="display: flex;">
+            <Button>
+                <div class="icon"><MdDragHandle/></div>
+            </Button>
+
+            <Button on:click={deleteNote}>
+                <div class="icon"><MdClose/></div>
+            </Button>
+        </div>
     {/if}
 </div>

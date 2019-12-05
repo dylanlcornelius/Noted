@@ -4,14 +4,16 @@
     import MdKeyboardArrowUp from 'svelte-icons/md/MdKeyboardArrowUp.svelte';
     import MdKeyboardArrowDown from 'svelte-icons/md/MdKeyboardArrowDown.svelte';
     import Button from '../util/button.svelte';
+    import TextBox from '../util/text-box.svelte';
     import { editState } from './edit-state.store.js';
     import { selectedPage } from './selected-page.store.js';
-
+    
     export let page;
 
     const dispatch = createEventDispatcher();
 
     let showSubPages = false;
+
     $: selected = page.id === $selectedPage.id;
 
     function toggleSubPages() {
@@ -42,6 +44,9 @@
     .folder-icon {
         width: 20px;
     }
+    .folder-edit {
+        margin-left: 12px;
+    }
     :global(.folder-icon svg) {
         vertical-align: middle;
     }
@@ -49,18 +54,29 @@
 
 <div class="page">
     {#if page.type === 'FOLDER'}
+        {#if $editState}
+            <TextBox content={page.title} type={'FOLDER'}/>
+        {/if}
+            
         <Button on:click={toggleSubPages}>
-            {page.title}
+            {#if !$editState}
+                {page.title}
+            {/if}
+
             {#if showSubPages}
-                <span class="folder-icon"><MdKeyboardArrowDown/></span>
+                <span class="folder-icon" class:folder-edit={!$editState}><MdKeyboardArrowDown/></span>
             {:else}
-                <span class="folder-icon"><MdKeyboardArrowUp/></span>
+                <span class="folder-icon" class:folder-edit={!$editState}><MdKeyboardArrowUp/></span>
             {/if}
         </Button>
     {:else}
-        <Button selected={selected} on:click={selectPage} >
-            {page.title}
-        </Button>
+        {#if $editState}
+            <TextBox content={page.title}/>
+        {:else}
+            <Button selected={selected} on:click={selectPage}>
+                {page.title}
+            </Button>
+        {/if}
     {/if}
     {#if $editState}
         <div>
