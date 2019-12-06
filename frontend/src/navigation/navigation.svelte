@@ -3,25 +3,17 @@
     import Button from '../util/button.svelte';
     import Input from '../util/input.svelte';
     import { editState } from './edit-state.store.js';
-
-    export let pages;
+    import { pages } from '../page/pages.store.js';
 
     const pageTypes = ['FOLDER', 'LIST', 'TODO'];
 
     let newPageTitle = '';
     let newPageType = 'FOLDER';
 
-    function addPage() {
-        pages = [...pages, {
-            id: pages.length,
-            title: newPageTitle,
-            type: newPageType,
-            default: false,
-            notes: [],
-            pages: [],
-            order: pages.length
-        }];
+    $: parentPages = $pages.filter(page => !page.parentPage);
 
+    function addPage() {
+        pages.addPage(newPageTitle, newPageType);
         newPageTitle = '';
     }
 </script>
@@ -31,9 +23,6 @@
 		border-right: 2px solid #505b66;
         padding: 10px;
         margin: 10px;
-		/* display: flex;
-		flex-direction: column;
-        align-items: start; */
 	}
     .pages {
         border-bottom: 1px solid #505b66;
@@ -58,8 +47,8 @@
     {/if}
 
     <div class="pages">
-        {#each pages as page (page.id)}
-            <NavigationItem page={page} on:deletePage/>
+        {#each parentPages as page (page.id)}
+            <NavigationItem page={page}/>
         {/each}
     </div>
 

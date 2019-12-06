@@ -5,6 +5,7 @@
     import Button from '../util/button.svelte';
     import Checkbox from '../util/checkbox.svelte';
     import TextBox from '../util/text-box.svelte';
+    import { notes } from './notes.store.js';
 
     export let id;
     export let content;
@@ -13,16 +14,14 @@
 
     const dispatch = createEventDispatcher();
 
-    function deleteNote() {
-        dispatch('deleteNote', {
-            id: id
-        });
-    }
-
     function toggleComplete() {
-        dispatch('toggleComplete', {
-            id: id
-        });
+        notes.toggleComplete(id);
+    }
+    function updateContent(event) {
+        notes.updateContent(id, event.detail.content);
+    }
+    function deleteNote() {
+        notes.deleteNote(id);
     }
 </script>
 
@@ -49,7 +48,7 @@
         {#if type === 'TODO'}
             <Checkbox bind:value={completed} on:toggle={toggleComplete}/>
         {/if}
-        <TextBox content={content}/>
+        <TextBox content={content} on:update={updateContent}/>
     </div>
     {#if type === 'TODO'}
         <div style="display: flex;">

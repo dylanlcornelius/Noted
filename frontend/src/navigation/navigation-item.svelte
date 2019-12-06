@@ -7,6 +7,9 @@
     import TextBox from '../util/text-box.svelte';
     import { editState } from './edit-state.store.js';
     import { selectedPage } from './selected-page.store.js';
+    import { filter } from '../page/filter.store.js';
+    import { pages } from '../page/pages.store.js';
+    import { notes } from '../note/notes.store.js';
     
     export let page;
 
@@ -15,19 +18,26 @@
     let showSubPages = false;
 
     $: selected = page.id === $selectedPage.id;
+    $: childrenPages = $pages.filter(p => {
+        if (page.childPages) {
+            return page.childPages.includes(p.id);
+        }
+        return false;
+    });
 
     function toggleSubPages() {
         showSubPages = !showSubPages;
     }
-
     function selectPage() {
         selectedPage.set(page);
+        filter.set('ALL');
     }
-
+    function updatePage(event) {
+        pages.updateTitle(page.id, event.detail.content);
+    }
     function deletePage() {
-        dispatch('deletePage', {
-            pageId: page.id
-        });
+        notes.deletePageNotes(page.id, $pages);
+        pages.deletePage(page.id);
     }
 </script>
 
@@ -55,7 +65,7 @@
 <div class="page">
     {#if page.type === 'FOLDER'}
         {#if $editState}
-            <TextBox content={page.title} type={'FOLDER'}/>
+            <TextBox content={page.title} type={'FOLDER'} on:update={updatePage}/>
         {/if}
             
         <Button on:click={toggleSubPages}>
@@ -71,7 +81,7 @@
         </Button>
     {:else}
         {#if $editState}
-            <TextBox content={page.title}/>
+            <TextBox content={page.title} on:update={updatePage}/>
         {:else}
             <Button selected={selected} on:click={selectPage}>
                 {page.title}
@@ -89,8 +99,8 @@
 
 {#if showSubPages}
     <div class="sub-navigation">
-        {#each page.pages as page (page.id)}
-            <svelte:self page={page} on:deletePage/>
+        {#each childrenPages as page (page.id)}
+            <svelte:self page={page} on:updatePage on:deletePage/>
         {/each}
     </div>
 {/if}

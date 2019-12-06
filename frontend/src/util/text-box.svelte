@@ -1,16 +1,23 @@
 <script>
+    import { createEventDispatcher } from 'svelte';
     import TextArea from '../util/text-area.svelte';
 
     export let content;
     export let type = 'CONTENT';
+
+    const dispatch = createEventDispatcher();
 
     let editState = false;
     
     $: notFolder = type !== 'FOLDER';
 
     function handleToggleEdit() {
+        if (editState) {
+            dispatch('update', {
+                content: content
+            });
+        }
         editState = !editState;
-        // if done then save
     }
 </script>
 

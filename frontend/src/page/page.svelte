@@ -1,54 +1,32 @@
 <script>
     import Note from '../note/note.svelte';
     import Input from '../util/input.svelte';
+    import { notes } from '../note/notes.store.js';
+    import { filter } from './filter.store.js';
 
+    export let id;
     export let title = 'hey';
-    export let notes = [];
     export let type;
 
     let newNote = '';
-    let currentFilter = 'ALL';
 
-    $: notesLeft = notes.filter(note => !note.completed).length;
-    $: filteredNotes = currentFilter === 'ALL'
-        ? notes
-        : currentFilter === 'COMPLETED'
-            ? notes.filter(note => note.completed)
-            : notes.filter(ntoe => !notes.compeleted);
+    $: pageNotes = $notes.filter(note => note.page === id);
+    $: notesLeft = pageNotes.filter(note => !note.completed).length;
+    $: filteredNotes = $filter === 'ALL'
+        ? pageNotes
+        : $filter === 'COMPLETED'
+            ? pageNotes.filter(note => note.completed)
+            : pageNotes.filter(note => !note.completed);
 
     function addNote(event) {
-        notes = [...notes, {
-            id: notes.length,
-            content: newNote,
-            completed: false,
-            order: notes.length
-        }];
-
+        notes.addNote(id, newNote);
         newNote = '';
     }
-
     function checkAllNotes(event) {
-        notes.forEach(note => note.completed = event.target.checked);
-        notes = notes;
+        notes.toggleAll(id, event.target.checked);
     }
-
-    function updateFilter(filter) {
-        currentFilter = filter;
-    }
-
-    function handleDeleteNote(event) {
-        notes = notes.filter(note => note.id !== event.detail.id);
-    }
-
-    function handleToggleComplete(event) {
-        const noteIndex = notes.findIndex(note => note.id === event.detail.id);
-        const updatedNote = {...notes[noteIndex], completed: !notes[noteIndex].completed};
-
-        notes = [
-            ...notes.slice(0, noteIndex),
-            updatedNote,
-            ...notes.slice(noteIndex + 1)
-        ]
+    function updateFilter(newFilter) {
+        filter.set(newFilter);
     }
 </script>
 
@@ -99,7 +77,7 @@
 
     <div>
         {#each filteredNotes as note (note.id)}
-            <Note id={note.id} content={note.content} completed={note.completed} type={type} on:deleteNote={handleDeleteNote} on:toggleComplete={handleToggleComplete}/>
+            <Note id={note.id} content={note.content} completed={note.completed} type={type}/>
         {/each}
     </div>
 
@@ -116,9 +94,9 @@
             
         <div class="row-container">
             <div>
-                <button on:click={() => updateFilter('ALL')} class:active="{currentFilter === 'ALL'}">All</button>
-                <button on:click={() => updateFilter('ACTIVE')} class:active="{currentFilter === 'ACTIVE'}">Active</button>
-                <button on:click={() => updateFilter('COMPLETED')} class:active="{currentFilter === 'COMPLETED'}">Completed</button>
+                <button on:click={() => updateFilter('ALL')} class:active="{$filter === 'ALL'}">All</button>
+                <button on:click={() => updateFilter('ACTIVE')} class:active="{$filter === 'ACTIVE'}">Active</button>
+                <button on:click={() => updateFilter('COMPLETED')} class:active="{$filter === 'COMPLETED'}">Completed</button>
             </div>
         </div>
     {/if}

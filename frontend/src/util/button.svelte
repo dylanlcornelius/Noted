@@ -11,6 +11,12 @@
 </script>
 
 <style>
+    :global(.icon) {
+        height: 15px;
+        width: 15px;
+        vertical-align: middle;
+        float: right;
+    }
     .button {
         display: flex;
         width: inherit;
@@ -33,13 +39,6 @@
             color: #444;
         }
 	}
-    
-    :global(.icon) {
-        height: 15px;
-        width: 15px;
-        vertical-align: middle;
-        float: right;
-    }
 </style>
 
 <button class="button" on:click={handleClick} class:selected={selected}>
