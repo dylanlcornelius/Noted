@@ -4,17 +4,19 @@ user:
     *put
 
 *book:
-    ^get
+    get
     post
     put
     ^delete
 
 page:
+    get
     post
     put
     ^delete
 
 note:
+    get
     post
     put
     delete

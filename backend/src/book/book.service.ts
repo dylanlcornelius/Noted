@@ -4,8 +4,7 @@ import { Book } from './book.model';
 export default class BookService {
     static getBooks(uid: string) {
         return new Promise((resolve, reject) => {
-            // hierarchical select
-            connection.query('SELECT * FROM public.pages WHERE "Uid" = ?;', [uid], (error, response) => {
+            connection.query('SELECT * FROM public.books WHERE "Uid" = ?;', [uid], (error, response) => {
                 if (error) {
                     reject(error);
                 }
