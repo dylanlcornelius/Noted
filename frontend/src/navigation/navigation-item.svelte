@@ -1,5 +1,6 @@
 <script>
     import { createEventDispatcher } from 'svelte';
+    import MdDragHandle from 'svelte-icons/md/MdDragHandle.svelte';
     import MdClose from 'svelte-icons/md/MdClose.svelte';
     import MdKeyboardArrowUp from 'svelte-icons/md/MdKeyboardArrowUp.svelte';
     import MdKeyboardArrowDown from 'svelte-icons/md/MdKeyboardArrowDown.svelte';
@@ -89,7 +90,11 @@
         {/if}
     {/if}
     {#if $editState}
-        <div>
+        <div style="display: flex;">
+            <Button handle={true}>
+                <div class="icon drag-icon"><MdDragHandle/></div>
+            </Button>
+
             <Button on:click={deletePage}>
                 <div class="icon"><MdClose/></div>
             </Button>

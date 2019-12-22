@@ -1,4 +1,6 @@
 <script>
+    import { onMount } from 'svelte';
+    import dragula from 'dragula';
     import NavigationItem from './navigation-item.svelte';
     import Button from '../util/button.svelte';
     import Input from '../util/input.svelte';
@@ -16,6 +18,19 @@
         pages.addPage(newPageTitle, newPageType);
         newPageTitle = '';
     }
+
+    onMount(() => {
+        const drake = dragula([document.getElementById('pages')], {
+            copySortSource: true,
+            moves: (el, container, handle) => {
+                return typeof handle.className === "string" ? handle.className.includes('handle') : false;
+            }
+        });
+
+        drake.on('drop', (el, target, source, sibling) => {
+            notes.updateOrder(el.id, [].slice.call(el.parentNode.children).findIndex((item) => el === item), id);
+        });
+    });
 </script>
 
 <style>
@@ -46,7 +61,7 @@
         <Input placeholder="Add new page..." bind:value={newPageTitle} on:add={addPage}/>
     {/if}
 
-    <div class="pages">
+    <div class="pages" id="pages">
         {#each parentPages as page (page.id)}
             <NavigationItem page={page}/>
         {/each}

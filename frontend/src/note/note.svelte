@@ -41,9 +41,12 @@
         text-decoration: line-through;
         color: grey;
     }
+    .drag-icon {
+        pointer-events: none;
+    }
 </style>
 
-<div class="note">
+<div class="note" id={id}>
     <div class="content-container" class:completed={completed}>
         {#if type === 'TODO'}
             <Checkbox bind:value={completed} on:toggle={toggleComplete}/>
@@ -52,8 +55,8 @@
     </div>
     {#if type === 'TODO'}
         <div style="display: flex;">
-            <Button>
-                <div class="icon"><MdDragHandle/></div>
+            <Button handle={true}>
+                <div class="icon drag-icon"><MdDragHandle/></div>
             </Button>
 
             <Button on:click={deleteNote}>

@@ -27,6 +27,28 @@ function createNoteStore() {
                 ...store.slice(noteIndex + 1)
             ];
         }),
+        updateOrder: (id, index, page) => update(store => {
+            const oldIndex = store.find(note => note.id == id).order;
+            const isGreater = index > oldIndex;
+
+            return store.map(note => {
+                if (note.page === page && note.id != id) {
+                    if (isGreater) {
+                        if (note.order <= index && note.order > oldIndex) {
+                            note.order--;
+                        }
+                    } else {
+                        if (note.order >= index && note.order < oldIndex) {
+                            note.order++;
+                        }
+                    }
+                } else if (note.id == id) {
+                    note.order = index;
+                }
+
+                return note;
+            });
+        }),
         toggleComplete: (id) => update(store => {
             const noteIndex = store.findIndex(note => note.id === id);
 

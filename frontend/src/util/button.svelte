@@ -2,6 +2,7 @@
     import { createEventDispatcher } from 'svelte';
 
     export let selected = false;
+    export let handle = false;
 
     const dispatch = createEventDispatcher();
 
@@ -41,6 +42,6 @@
 	}
 </style>
 
-<button class="button" on:click={handleClick} class:selected={selected}>
+<button class="button" on:click={handleClick} class:selected={selected} class:handle={handle}>
     <slot></slot>
 </button>

@@ -61,16 +61,16 @@
 	selectedPage.set($pages.find(page => page.default));
 
 	notes.set([
-		{id: 0, content: 'first', order: 1, completed: true, page: 0},
-		{id: 1, content: 'second', order: 2, completed: false, page: 0},
-		{id: 2, content: 'sub 1', order: 1, completed: false, page: 4},
-		{id: 3, content: 'sub 2', order: 2, completed: false, page: 4},
-		{id: 4, content: 'this', order: 1, page: 6},
-		{id: 5, content: 'that', order: 2, page: 6},
-		{id: 6, content: 'first 2', order: 1, page: 2},
-		{id: 7, content: 'second 2', order: 2, page: 2},
-		{id: 8, content: 'first 3', order: 1, completed: false, page: 3},
-		{id: 9, content: 'second 3', order: 2, completed: false, page: 3},
+		{id: 0, content: 'first', order: 0, completed: true, page: 0},
+		{id: 1, content: 'second', order: 1, completed: false, page: 0},
+		{id: 9, content: 'third', order: 2, completed: false, page: 0},
+		{id: 2, content: 'sub 1', order: 0, completed: false, page: 4},
+		{id: 3, content: 'sub 2', order: 1, completed: false, page: 4},
+		{id: 4, content: 'this', order: 0, page: 6},
+		{id: 5, content: 'that', order: 1, page: 6},
+		{id: 6, content: 'first 2', order: 0, page: 2},
+		{id: 7, content: 'second 2', order: 1, page: 2},
+		{id: 8, content: 'first 3', order: 0, completed: false, page: 3},
 	]);
 </script>
 

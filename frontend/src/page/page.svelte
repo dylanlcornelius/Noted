@@ -1,4 +1,6 @@
 <script>
+    import { onMount } from 'svelte';
+    import dragula from 'dragula';
     import Note from '../note/note.svelte';
     import Input from '../util/input.svelte';
     import { notes } from '../note/notes.store.js';
@@ -9,14 +11,23 @@
     export let type;
 
     let newNote = '';
+    let drake;
 
     $: pageNotes = $notes.filter(note => note.page === id);
     $: notesLeft = pageNotes.filter(note => !note.completed).length;
-    $: filteredNotes = $filter === 'ALL'
+    $: filteredNotes = ($filter === 'ALL'
         ? pageNotes
         : $filter === 'COMPLETED'
             ? pageNotes.filter(note => note.completed)
-            : pageNotes.filter(note => !note.completed);
+            : pageNotes.filter(note => !note.completed)
+    ).sort((a, b) => a.order - b.order);
+    $: {
+        if (type === 'TODO') {
+            initDND();
+        } else {
+            drake.destroy();
+        }
+    };
 
     function addNote(event) {
         notes.addNote(id, newNote);
@@ -28,6 +39,28 @@
     function updateFilter(newFilter) {
         filter.set(newFilter);
     }
+    function initDND() {
+        // fix for initDND getting called twice onMount - onMount is necessary to wait for element id to be initialized
+        if (drake) {
+            drake.destroy();
+        }
+        if (document.getElementById('notes')) {
+            drake = dragula([document.getElementById('notes')], {
+                copySortSource: true,
+                moves: (el, container, handle) => {
+                    return typeof handle.className === "string" ? handle.className.includes('handle') : false;
+                }
+            });
+
+            drake.on('drop', (el, target, source, sibling) => {
+                notes.updateOrder(el.id, [].slice.call(el.parentNode.children).findIndex((item) => el === item), id);
+            });
+        }
+    }
+
+    onMount(() => {
+        initDND();
+    });
 </script>
 
 <style>
@@ -75,7 +108,7 @@
         <Input placeholder="Add new item..." bind:value={newNote} on:add={addNote}/>
     {/if}
 
-    <div>
+    <div id="notes">
         {#each filteredNotes as note (note.id)}
             <Note id={note.id} content={note.content} completed={note.completed} type={type}/>
         {/each}
