@@ -1,5 +1,5 @@
 <script>
-    import { createEventDispatcher } from 'svelte';
+    import { createEventDispatcher, afterUpdate } from 'svelte';
     import MdDragHandle from 'svelte-icons/md/MdDragHandle.svelte';
     import MdClose from 'svelte-icons/md/MdClose.svelte';
     import MdKeyboardArrowUp from 'svelte-icons/md/MdKeyboardArrowUp.svelte';
@@ -19,12 +19,14 @@
     let showSubPages = false;
 
     $: selected = page.id === $selectedPage.id;
-    $: childrenPages = $pages.filter(p => {
-        if (page.childPages) {
-            return page.childPages.includes(p.id);
-        }
-        return false;
-    });
+    $: childrenPages = $pages
+        ? $pages.filter(p => {
+                if (page.childPages) {
+                    return page.childPages.includes(p.id);
+                }
+                return false;
+            }).sort((a, b) => a.order - b.order)
+        : [];
 
     function toggleSubPages() {
         showSubPages = !showSubPages;
@@ -40,9 +42,25 @@
         notes.deletePageNotes(page.id, $pages);
         pages.deletePage(page.id);
     }
+
+    afterUpdate(() => {
+        dispatch('toggleShowSubPages', {
+            showSubPages: showSubPages
+        });
+    });
 </script>
 
 <style>
+    :global(.folder-icon svg) {
+        vertical-align: middle;
+    }
+    :global(.gu-mirror) {
+        color: #eee;
+    }
+    .page-container {
+        display: flex;
+        flex-direction: column;
+    }
     .page {
         display: flex;
         width: 100%;
@@ -51,6 +69,7 @@
 		display: flex;
 		flex-direction: column;
         padding-left: 10px;
+        min-height: 10px;
 	}
     .folder-icon {
         width: 20px;
@@ -58,54 +77,56 @@
     .folder-edit {
         margin-left: 12px;
     }
-    :global(.folder-icon svg) {
-        vertical-align: middle;
+    .drag-icon {
+        pointer-events: none;
     }
 </style>
 
-<div class="page">
-    {#if page.type === 'FOLDER'}
-        {#if $editState}
-            <TextBox content={page.title} type={'FOLDER'} on:update={updatePage}/>
-        {/if}
-            
-        <Button on:click={toggleSubPages}>
-            {#if !$editState}
-                {page.title}
+<div class="page-container" id={page.id}>
+    <div class="page">
+        {#if page.type === 'FOLDER'}
+            {#if $editState}
+                <TextBox content={page.title} type={'FOLDER'} on:update={updatePage}/>
             {/if}
+                
+            <Button on:click={toggleSubPages}>
+                {#if !$editState}
+                    {page.title}
+                {/if}
 
-            {#if showSubPages}
-                <span class="folder-icon" class:folder-edit={!$editState}><MdKeyboardArrowDown/></span>
-            {:else}
-                <span class="folder-icon" class:folder-edit={!$editState}><MdKeyboardArrowUp/></span>
-            {/if}
-        </Button>
-    {:else}
-        {#if $editState}
-            <TextBox content={page.title} on:update={updatePage}/>
+                {#if showSubPages}
+                    <span class="folder-icon" class:folder-edit={!$editState}><MdKeyboardArrowDown/></span>
+                {:else}
+                    <span class="folder-icon" class:folder-edit={!$editState}><MdKeyboardArrowUp/></span>
+                {/if}
+            </Button>
         {:else}
-            <Button selected={selected} on:click={selectPage}>
-                {page.title}
-            </Button>
+            {#if $editState}
+                <TextBox content={page.title} on:update={updatePage}/>
+            {:else}
+                <Button selected={selected} on:click={selectPage}>
+                    {page.title}
+                </Button>
+            {/if}
         {/if}
-    {/if}
-    {#if $editState}
-        <div style="display: flex;">
-            <Button handle={true}>
-                <div class="icon drag-icon"><MdDragHandle/></div>
-            </Button>
+        {#if $editState}
+            <div style="display: flex;">
+                <Button handle={true}>
+                    <div class="icon drag-icon"><MdDragHandle/></div>
+                </Button>
 
-            <Button on:click={deletePage}>
-                <div class="icon"><MdClose/></div>
-            </Button>
+                <Button on:click={deletePage}>
+                    <div class="icon"><MdClose/></div>
+                </Button>
+            </div>
+        {/if}
+    </div>
+
+    {#if showSubPages}
+        <div class="sub-navigation pages" id={page.id}>
+            {#each childrenPages as page (page.id)}
+                <svelte:self page={page} on:updatePage on:deletePage on:toggleShowSubPages/>
+            {/each}
         </div>
     {/if}
 </div>
-
-{#if showSubPages}
-    <div class="sub-navigation">
-        {#each childrenPages as page (page.id)}
-            <svelte:self page={page} on:updatePage on:deletePage/>
-        {/each}
-    </div>
-{/if}

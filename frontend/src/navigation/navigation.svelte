@@ -11,25 +11,39 @@
 
     let newPageTitle = '';
     let newPageType = 'FOLDER';
+    let drake;
 
-    $: parentPages = $pages.filter(page => !page.parentPage);
+    $: parentPages = $pages.filter(page => !page.parentPage).sort((a, b) => a.order - b.order);
 
     function addPage() {
         pages.addPage(newPageTitle, newPageType);
         newPageTitle = '';
     }
 
-    onMount(() => {
-        const drake = dragula([document.getElementById('pages')], {
+    function initDND() {
+        if (drake) {
+            drake.destroy();
+        }
+
+        drake = dragula([].slice.apply(document.querySelectorAll('.pages')), {
             copySortSource: true,
+            revertOnSpill: true,
             moves: (el, container, handle) => {
-                return typeof handle.className === "string" ? handle.className.includes('handle') : false;
+                return typeof handle.className === 'string' ? handle.className.includes('handle') : false;
+            },
+            accepts: (el, target, source) => {
+                return !el.contains(target);
             }
         });
 
         drake.on('drop', (el, target, source, sibling) => {
-            notes.updateOrder(el.id, [].slice.call(el.parentNode.children).findIndex((item) => el === item), id);
+            pages.updateOrder(el.id, [].slice.call(el.parentNode.children).findIndex((item) => el === item), target.id, source.id);
+            console.log($pages);
         });
+    }
+
+    onMount(() => {
+        initDND();
     });
 </script>
 
@@ -61,9 +75,9 @@
         <Input placeholder="Add new page..." bind:value={newPageTitle} on:add={addPage}/>
     {/if}
 
-    <div class="pages" id="pages">
+    <div class="pages">
         {#each parentPages as page (page.id)}
-            <NavigationItem page={page}/>
+            <NavigationItem page={page} on:toggleShowSubPages={initDND}/>
         {/each}
     </div>
 

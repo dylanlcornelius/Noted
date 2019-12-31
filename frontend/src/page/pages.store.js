@@ -24,9 +24,56 @@ function createPageStore() {
                 ...store.slice(pageIndex + 1)
             ];
         }),
+        updateOrder: (id, index, parentPageId, oldParentPageId) => update(store => {
+            id = parseInt(id);
+            parentPageId = parentPageId ? parseInt(parentPageId) : undefined;
+            oldParentPageId = oldParentPageId ? parseInt(oldParentPageId) : undefined;
+
+            const oldOrder = store.find(page => page.id === id).order;
+            const isReorder = parentPageId === oldParentPageId;
+            const isGreater = index > oldOrder;
+
+            return store.map(page => {
+                if (page.id === id) {
+                    page.order = index;
+                    page.parentPage = parentPageId;
+                } else if (isReorder) {
+                    // reorder inside same folder
+                    if (page.parentPage === parentPageId) {
+                        if (isGreater && page.order <= index && page.order > oldOrder) {
+                            page.order--;
+                        } else if (page.order >= index && page.order < oldOrder) {
+                            page.order++;
+                        }
+                    }
+                } else {
+                    // move folders - adjust parent/child references
+                    if (page.id === oldParentPageId) {
+                        page.childPages = page.childPages.filter(childId => childId !== id);
+                    } else if (page.id === parentPageId) {
+                        if (!page.childPages) {
+                            page.childPages = [];
+                        }
+                        page.childPages.push(id);
+                    }
+                    
+                    if (page.parentPage === oldParentPageId && page.order >= oldOrder) {
+                        page.order--;
+                    } else if (page.parentPage === parentPageId && page.order >= index) {
+                        page.order++;
+                    }
+                }
+
+                return page;
+            });
+        }),
         deletePage: (id) => update(store => {
             let updatedPages = store;
             let pagesToDelete = [id];
+
+            const page = store.find(page => page.id === id);
+            const oldParentPageId = page.parentPage;
+            const oldOrder = page.order;
 
             while (pagesToDelete.length > 0) {
                 updatedPages.forEach(page => {
@@ -43,7 +90,18 @@ function createPageStore() {
                 pagesToDelete.shift();
             }
 
-            return updatedPages;
+            // update order
+            return updatedPages.map(page => {
+                if (page.id === oldParentPageId) {
+                    page.childPages = page.childPages.filter(childId => childId !== id);
+                }
+                
+                if (page.parentPage === oldParentPageId && page.order > oldOrder) {
+                    page.order--;
+                }
+
+                return page;
+            });
         })
     };
 }

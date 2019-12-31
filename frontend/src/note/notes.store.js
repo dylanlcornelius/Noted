@@ -28,22 +28,20 @@ function createNoteStore() {
             ];
         }),
         updateOrder: (id, index, page) => update(store => {
-            const oldIndex = store.find(note => note.id == id).order;
-            const isGreater = index > oldIndex;
+            id = parseInt(id);
+
+            const oldOrder = store.find(note => note.id === id).order;
+            const isGreater = index > oldOrder;
 
             return store.map(note => {
-                if (note.page === page && note.id != id) {
-                    if (isGreater) {
-                        if (note.order <= index && note.order > oldIndex) {
-                            note.order--;
-                        }
-                    } else {
-                        if (note.order >= index && note.order < oldIndex) {
-                            note.order++;
-                        }
-                    }
-                } else if (note.id == id) {
+                if (note.id === id) {
                     note.order = index;
+                } else if (note.page === page) {
+                    if (isGreater && note.order <= index && note.order > oldOrder) {
+                        note.order--;
+                    } else if (note.order >= index && note.order < oldOrder) {
+                        note.order++;
+                    }
                 }
 
                 return note;
@@ -68,7 +66,15 @@ function createNoteStore() {
             });
         }),
         deleteNote: (id) => update(store => {
-            return store.filter(note => note.id !== id);
+            const oldOrder = store.find(note => note.id === id).order;
+            
+            return store.filter(note => note.id !== id)
+            .map(note => {
+                if (note.order > oldOrder) {
+                    note.order--;
+                }
+                return note;
+            });
         }),
         deletePageNotes: (id, pages) => update(store => {
             let pageNotesToDelete = [id];

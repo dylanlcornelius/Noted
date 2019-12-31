@@ -14,12 +14,14 @@
 			title: 'Default',
 			type: 'TODO',
 			default: true,
+			order: 0
 		},
 		{
 			id: 1,
 			title: 'Folder',
 			type: 'FOLDER',
 			default: false,
+			order: 2,
 			childPages: [4, 5],
 		},
 		{
@@ -27,6 +29,7 @@
 			title: 'Sub todo',
 			type: 'TODO',
 			default: false,
+			order: 0,
 			parentPage: 1,
 		},
 		{
@@ -34,6 +37,7 @@
 			title: 'Sub folder',
 			type: 'FOLDER',
 			default: false,
+			order: 1,
 			parentPage: 1,
 			childPages: [6],
 		},
@@ -42,6 +46,7 @@
 			title: 'List',
 			type: 'LIST',
 			default: false,
+			order: 0,
 			parentPage: 5,
 		},
 		{
@@ -49,12 +54,14 @@
 			title: 'Test 2',
 			type: 'LIST',
 			default: false,
+			order: 1,
 		},
 		{
 			id: 3,
 			title: 'Test 3',
 			type: 'TODO',
 			default: false,
+			order: 3,
 		},
 	]);
 

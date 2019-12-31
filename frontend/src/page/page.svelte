@@ -47,6 +47,7 @@
         if (document.getElementById('notes')) {
             drake = dragula([document.getElementById('notes')], {
                 copySortSource: true,
+                revertOnSpill: true,
                 moves: (el, container, handle) => {
                     return typeof handle.className === "string" ? handle.className.includes('handle') : false;
                 }
