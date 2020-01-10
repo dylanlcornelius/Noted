@@ -24,6 +24,17 @@ function createPageStore() {
                 ...store.slice(pageIndex + 1)
             ];
         }),
+        updateDefault: (id) => update(store => {
+            return store.map(page => {
+                if (page.id === id) {
+                    page.default = true
+                } else {
+                    page.default = false
+                }
+
+                return page;
+            });
+        }),
         updateOrder: (id, index, parentPageId, oldParentPageId) => update(store => {
             id = parseInt(id);
             parentPageId = parentPageId ? parseInt(parentPageId) : undefined;

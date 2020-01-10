@@ -1,16 +1,16 @@
 <script>
     import { onMount } from 'svelte';
     import dragula from 'dragula';
+    import PageTypes from './page-types.js';
     import NavigationItem from './navigation-item.svelte';
     import Button from '../util/button.svelte';
     import Input from '../util/input.svelte';
+    import Select from '../util/select.svelte';
     import { editState } from './edit-state.store.js';
     import { pages } from '../page/pages.store.js';
 
-    const pageTypes = ['FOLDER', 'LIST', 'TODO'];
-
     let newPageTitle = '';
-    let newPageType = 'FOLDER';
+    let newPageType = PageTypes.FOLDER;
     let drake;
 
     $: parentPages = $pages.filter(page => !page.parentPage).sort((a, b) => a.order - b.order);
@@ -38,7 +38,6 @@
 
         drake.on('drop', (el, target, source, sibling) => {
             pages.updateOrder(el.id, [].slice.call(el.parentNode.children).findIndex((item) => el === item), target.id, source.id);
-            console.log($pages);
         });
     }
 
@@ -53,10 +52,12 @@
         padding: 10px;
         margin: 10px;
 	}
+    .new-page-container {
+        display: flex;
+    }
     .pages {
         border-bottom: 1px solid #505b66;
     }
-
 	@media only screen and (max-width: 767px) {
 		.navigation {
 			border-right: none;
@@ -67,12 +68,10 @@
 
 <div class="navigation">
     {#if $editState}
-        <select bind:value={newPageType}>
-            {#each pageTypes as type}
-                <option>{type}</option>
-            {/each}
-        </select>
-        <Input placeholder="Add new page..." bind:value={newPageTitle} on:add={addPage}/>
+        <div class="new-page-container">
+            <Select bind:value={newPageType} list={Object.values(PageTypes)}/>
+            <Input placeholder="Add new page..." bind:value={newPageTitle} on:add={addPage}/>
+        </div>
     {/if}
 
     <div class="pages">

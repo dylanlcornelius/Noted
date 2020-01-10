@@ -1,14 +1,35 @@
 <script>
     import { onMount } from 'svelte';
     import dragula from 'dragula';
+    import MdMoreVert from 'svelte-icons/md/MdMoreVert.svelte'
+    import PageTypes from '../navigation/page-types.js';
     import Note from '../note/note.svelte';
     import Input from '../util/input.svelte';
+    import Button from '../util/button.svelte';
+    import Dropdown from '../util/dropdown.svelte';
+    import { pages } from './pages.store.js';
     import { notes } from '../note/notes.store.js';
     import { filter } from './filter.store.js';
 
     export let id;
     export let title = 'hey';
     export let type;
+
+    const options = [
+        {
+            name: 'Set as default',
+            action: () => {
+                pages.updateDefault(id);
+            }
+        },
+        {
+            name: 'Delete page',
+            action: () => {
+                notes.deletePageNotes(id, $pages);
+                pages.deletePage(id);
+            }
+        }
+    ];
 
     let newNote = '';
     let drake;
@@ -22,9 +43,9 @@
             : pageNotes.filter(note => !note.completed)
     ).sort((a, b) => a.order - b.order);
     $: {
-        if (type === 'TODO') {
+        if (type === PageTypes.TODO) {
             initDND();
-        } else {
+        } else if (drake) {
             drake.destroy();
         }
     };
@@ -84,28 +105,14 @@
         margin-bottom: 15px;
         border-top: 1px solid #505b66;
     }
-    button {
-        min-width: 60px;
-        border: none;
-        border-radius: 1px;
-        background: none;
-        white-space: nowrap;
-        color: #eee;
-    }
-    button:hover {
-        color: #aaa;
-    }
-    .active {
-        background: #12a0f2;
-    }
-    .active:hover {
-        color: #444;
+    .filters-container {
+        display: flex;
     }
 </style>
 
 <div class="page">
     <div class="title">{title}</div>
-    {#if type === 'TODO'}
+    {#if type === PageTypes.TODO}
         <Input placeholder="Add new item..." bind:value={newNote} on:add={addNote}/>
     {/if}
 
@@ -115,7 +122,7 @@
         {/each}
     </div>
 
-    {#if type === 'TODO'}
+    {#if type === PageTypes.TODO}
         <div class="row-container">
             <div>
                 <input type="checkbox" on:change={checkAllNotes}/>
@@ -127,10 +134,17 @@
         </div>
             
         <div class="row-container">
+            <div class="filters-container">
+                <Button on:click={() => updateFilter('ALL')} selected="{$filter === 'ALL'}">All</Button>
+                <Button on:click={() => updateFilter('ACTIVE')} selected="{$filter === 'ACTIVE'}">Active</Button>
+                <Button on:click={() => updateFilter('COMPLETED')} selected="{$filter === 'COMPLETED'}">Completed</Button>
+            </div>
             <div>
-                <button on:click={() => updateFilter('ALL')} class:active="{$filter === 'ALL'}">All</button>
-                <button on:click={() => updateFilter('ACTIVE')} class:active="{$filter === 'ACTIVE'}">Active</button>
-                <button on:click={() => updateFilter('COMPLETED')} class:active="{$filter === 'COMPLETED'}">Completed</button>
+                <Dropdown options={options} right={true}>
+                    <Button>
+                        <span class="icon"><MdMoreVert/></span>
+                    </Button>
+                </Dropdown>
             </div>
         </div>
     {/if}

@@ -2,6 +2,7 @@
     import { createEventDispatcher } from 'svelte';
     import MdClose from 'svelte-icons/md/MdClose.svelte';
     import MdDragHandle from 'svelte-icons/md/MdDragHandle.svelte';
+    import PageTypes from '../navigation/page-types.js';
     import Button from '../util/button.svelte';
     import Checkbox from '../util/checkbox.svelte';
     import TextBox from '../util/text-box.svelte';
@@ -48,12 +49,12 @@
 
 <div class="note" id={id}>
     <div class="content-container" class:completed={completed}>
-        {#if type === 'TODO'}
+        {#if type === PageTypes.TODO}
             <Checkbox bind:value={completed} on:toggle={toggleComplete}/>
+            <TextBox content={content} on:update={updateContent}/>
         {/if}
-        <TextBox content={content} on:update={updateContent}/>
     </div>
-    {#if type === 'TODO'}
+    {#if type === PageTypes.TODO}
         <div style="display: flex;">
             <Button handle={true}>
                 <div class="icon drag-icon"><MdDragHandle/></div>

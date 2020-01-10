@@ -6,11 +6,13 @@
 <style>
     .container {
         position: relative;
+        height: 100%;
     }
     pre {
         min-height: 33px;
         max-height: auto;
         color: transparent;
+        height: 100%;
     }
     pre, textarea {
         font-family: inherit;

@@ -14,18 +14,18 @@
 </script>
 
 <style>
-    .input {
+    input {
         background: none;
         border: none;
         color: white;
     }
-    .input:focus {
+    input:focus {
         outline: none;
     }
-    .input::placeholder {
+    input::placeholder {
         color: white;
         opacity: 0.6;
     }
 </style>
 
-<input class="input" type="text" placeholder={placeholder} bind:value on:keydown={add}/>
+<input type="text" placeholder={placeholder} bind:value on:keydown={add}/>

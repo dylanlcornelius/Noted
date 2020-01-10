@@ -1,5 +1,6 @@
 <script>
     import { createEventDispatcher } from 'svelte';
+    import PageTypes from '../navigation/page-types.js';
     import TextArea from '../util/text-area.svelte';
 
     export let content;
@@ -9,7 +10,7 @@
 
     let editState = false;
     
-    $: notFolder = type !== 'FOLDER';
+    $: notFolder = type !== PageTypes.FOLDER;
 
     function handleToggleEdit() {
         if (editState) {

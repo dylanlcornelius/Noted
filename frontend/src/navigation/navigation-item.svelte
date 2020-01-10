@@ -4,6 +4,7 @@
     import MdClose from 'svelte-icons/md/MdClose.svelte';
     import MdKeyboardArrowUp from 'svelte-icons/md/MdKeyboardArrowUp.svelte';
     import MdKeyboardArrowDown from 'svelte-icons/md/MdKeyboardArrowDown.svelte';
+    import PageTypes from './page-types.js';
     import Button from '../util/button.svelte';
     import TextBox from '../util/text-box.svelte';
     import { editState } from './edit-state.store.js';
@@ -84,9 +85,9 @@
 
 <div class="page-container" id={page.id}>
     <div class="page">
-        {#if page.type === 'FOLDER'}
+        {#if page.type === PageTypes.FOLDER}
             {#if $editState}
-                <TextBox content={page.title} type={'FOLDER'} on:update={updatePage}/>
+                <TextBox content={page.title} type={PageTypes.FOLDER} on:update={updatePage}/>
             {/if}
                 
             <Button on:click={toggleSubPages}>
