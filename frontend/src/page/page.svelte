@@ -4,9 +4,11 @@
     import MdMoreVert from 'svelte-icons/md/MdMoreVert.svelte'
     import PageTypes from '../navigation/page-types.js';
     import Note from '../note/note.svelte';
+    import TextBox from '../util/text-box.svelte';
     import Input from '../util/input.svelte';
     import Button from '../util/button.svelte';
     import Dropdown from '../util/dropdown.svelte';
+    import { selectedPage } from '../navigation/selected-page.store.js';
     import { pages } from './pages.store.js';
     import { notes } from '../note/notes.store.js';
     import { filter } from './filter.store.js';
@@ -25,6 +27,10 @@
         {
             name: 'Delete page',
             action: () => {
+                if ($selectedPage.id === id) {
+                    selectedPage.set(null);
+                }
+                
                 notes.deletePageNotes(id, $pages);
                 pages.deletePage(id);
             }
@@ -50,6 +56,13 @@
         }
     };
 
+    function updatePage(event) {
+        pages.updateTitle(id, event.detail.content);
+        if ($selectedPage && id === $selectedPage.id) {
+            const newPage = $pages.find(p => p.id === id);
+            selectedPage.set(newPage);
+        }
+    }
     function addNote(event) {
         notes.addNote(id, newNote);
         newNote = '';
@@ -111,7 +124,9 @@
 </style>
 
 <div class="page">
-    <div class="title">{title}</div>
+    <div class="title">
+        <TextBox content={title} on:update={updatePage}/>
+    </div>
     {#if type === PageTypes.TODO}
         <Input placeholder="Add new item..." bind:value={newNote} on:add={addNote}/>
     {/if}

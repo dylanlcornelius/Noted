@@ -17,9 +17,9 @@
 
     const dispatch = createEventDispatcher();
 
-    let showSubPages = false;
+    let showSubPages = hasDefault() || page.open;
 
-    $: selected = page.id === $selectedPage.id;
+    $: selected = $selectedPage && page.id === $selectedPage.id;
     $: childrenPages = $pages
         ? $pages.filter(p => {
                 if (page.childPages) {
@@ -29,8 +29,31 @@
             }).sort((a, b) => a.order - b.order)
         : [];
 
+    function hasDefault() {
+        let allPages = $pages;
+        let pagesToDelete = [page.id];
+
+        let hasDefault = false;
+
+        while (pagesToDelete.length > 0) {
+            allPages.forEach(page => {
+                if (page.id === pagesToDelete[0]) {
+                    if (page.childPages) {
+                        pagesToDelete = pagesToDelete.concat(page.childPages);
+                    }
+
+                    hasDefault |= page.default;
+                }
+            });
+
+            pagesToDelete.shift();
+        }
+
+        return hasDefault;
+    }
     function toggleSubPages() {
         showSubPages = !showSubPages;
+        pages.updateOpen(page.id, showSubPages);
     }
     function selectPage() {
         selectedPage.set(page);
@@ -38,8 +61,16 @@
     }
     function updatePage(event) {
         pages.updateTitle(page.id, event.detail.content);
+        if (selected) {
+            const newPage = $pages.find(p => p.id === page.id);
+            selectedPage.set(newPage);
+        }
     }
     function deletePage() {
+        if ($selectedPage && $selectedPage.id === page.id) {
+            selectedPage.set(null);
+        }
+
         notes.deletePageNotes(page.id, $pages);
         pages.deletePage(page.id);
     }
@@ -72,6 +103,9 @@
         padding-left: 10px;
         min-height: 10px;
 	}
+    .edit-container {
+        display: flex;
+    }
     .folder-icon {
         width: 20px;
     }
@@ -87,7 +121,7 @@
     <div class="page">
         {#if page.type === PageTypes.FOLDER}
             {#if $editState}
-                <TextBox content={page.title} type={PageTypes.FOLDER} on:update={updatePage}/>
+                <TextBox content={page.title} on:update={updatePage}/>
             {/if}
                 
             <Button on:click={toggleSubPages}>
@@ -103,15 +137,18 @@
             </Button>
         {:else}
             {#if $editState}
-                <TextBox content={page.title} on:update={updatePage}/>
+                <TextBox content={page.title} editor={true} on:update={updatePage}/>
             {:else}
                 <Button selected={selected} on:click={selectPage}>
                     {page.title}
+                    {#if page.default}
+                        *
+                    {/if}
                 </Button>
             {/if}
         {/if}
         {#if $editState}
-            <div style="display: flex;">
+            <div class="edit-container">
                 <Button handle={true}>
                     <div class="icon drag-icon"><MdDragHandle/></div>
                 </Button>

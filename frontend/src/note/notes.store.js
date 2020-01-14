@@ -1,20 +1,29 @@
-import { writable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
+import { generateId } from '../util/id-generator.js/';
+
+const id = generateId();
 
 function createNoteStore() {
     const { subscribe, set, update } = writable([]);
 
     return {
         subscribe,
-        set: store => set(store),
-        addNote: (id, content) => update(store => {
+        set: store => {
+            set(store);
+            id.reset(store);
+        },
+        addNote: (pageId, content) => update(store => {
+            const newId = get(id);
+            id.increment();
+
             return [
                 ...store,
                 {
-                    id: store.length,
+                    id: newId,
                     content: content,
                     completed: false,
                     order: store.length,
-                    page: id,
+                    page: pageId,
                 }
             ];
         }),

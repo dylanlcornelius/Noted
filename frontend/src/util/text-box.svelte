@@ -4,14 +4,12 @@
     import TextArea from '../util/text-area.svelte';
 
     export let content;
-    export let type = 'CONTENT';
+    export let editor = false;
 
     const dispatch = createEventDispatcher();
 
     let editState = false;
     
-    $: notFolder = type !== PageTypes.FOLDER;
-
     function handleToggleEdit() {
         if (editState) {
             dispatch('update', {
@@ -51,11 +49,11 @@
 {#if editState}
     <span class="container" on:click={handleToggleEdit}></span>
 
-    <span class="input" class:wide={notFolder} on:click|stopPropagation={() => {}}>
-        <TextArea bind:value={content} wrap={notFolder}/>
+    <span class="input" class:wide={editor} on:click|stopPropagation={() => {}}>
+        <TextArea bind:value={content} wrap={editor}/>
     </span>
 {:else}
-    <span class="content" class:text={notFolder} on:click={handleToggleEdit}>
+    <span class="content" class:text={editor} on:click={handleToggleEdit}>
         {content}
     </span>
 {/if}

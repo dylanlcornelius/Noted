@@ -1,14 +1,23 @@
-import { writable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
+import { generateId } from '../util/id-generator.js/';
+
+const id = generateId();
 
 function createPageStore() {
     const { subscribe, set, update } = writable([]);
 
     return {
         subscribe,
-        set: store => set(store),
+        set: store => {
+            set(store);
+            id.reset(store);
+        },
         addPage: (title, type) => update(store => {
+            const newId = get(id);
+            id.increment();
+
             return [...store, {
-                id: store.length,
+                id: newId,
                 title: title,
                 type: type,
                 default: false,
@@ -34,6 +43,15 @@ function createPageStore() {
 
                 return page;
             });
+        }),
+        updateOpen: (id, open) => update(store => {
+            const pageIndex = store.findIndex(page => page.id === id);
+
+            return [
+                ...store.slice(0, pageIndex),
+                {...store[pageIndex], open: open},
+                ...store.slice(pageIndex + 1)
+            ];
         }),
         updateOrder: (id, index, parentPageId, oldParentPageId) => update(store => {
             id = parseInt(id);

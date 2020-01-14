@@ -38,6 +38,9 @@
         display: flex;
         width: 100%;
     }
+    .todo-container {
+        display: flex;
+    }
     .completed {
         text-decoration: line-through;
         color: grey;
@@ -51,11 +54,11 @@
     <div class="content-container" class:completed={completed}>
         {#if type === PageTypes.TODO}
             <Checkbox bind:value={completed} on:toggle={toggleComplete}/>
-            <TextBox content={content} on:update={updateContent}/>
+            <TextBox content={content} editor={true} on:update={updateContent}/>
         {/if}
     </div>
     {#if type === PageTypes.TODO}
-        <div style="display: flex;">
+        <div class="todo-container">
             <Button handle={true}>
                 <div class="icon drag-icon"><MdDragHandle/></div>
             </Button>

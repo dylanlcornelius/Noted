@@ -1,29 +1,28 @@
 <script>
+    import MdArrowDropDown from 'svelte-icons/md/MdArrowDropDown.svelte'
+    import Dropdown from './dropdown.svelte';
+
     export let value;
     export let list;
+
+    $: options = list.map((option) => {
+        return {
+            name: option,
+            action: () => {value = option;}
+        }
+    });
 </script>
 
 <style>
-    select {
-        background: none;
-        border: none;
-        color: white;
-        padding: 0;
-    }
-    select:focus {
-        outline: none;
-    }
-    option {
-        background-color: #3a3a3a;
-        color: white;
-    }
-    option:focus {
-        outline: none;
+    .selected {
+        display: flex;
+        border: 1px solid #999;
+        padding: 0.4em;
     }
 </style>
 
-<select bind:value>
-    {#each list as item}
-        <option>{item}</option>
-    {/each}
-</select>
+<Dropdown options={options}>
+    <div class="selected">
+        {value} <span class="icon"><MdArrowDropDown/></span>
+    </div>
+</Dropdown>

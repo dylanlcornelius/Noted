@@ -9,60 +9,13 @@
 	export let name;
 
 	pages.set([
-		{
-			id: 0,
-			title: 'Default',
-			type: 'Todo',
-			default: true,
-			order: 0
-		},	
-		{
-			id: 1,
-			title: 'Folder',
-			type: 'Folder',
-			default: false,
-			order: 2,
-			childPages: [4, 5],
-		},
-		{
-			id: 4,
-			title: 'Sub todo',
-			type: 'Todo',
-			default: false,
-			order: 0,
-			parentPage: 1,
-		},
-		{
-			id: 5,
-			title: 'Sub folder',
-			type: 'Folder',
-			default: false,
-			order: 1,
-			parentPage: 1,
-			childPages: [6],
-		},
-		{
-			id: 6,
-			title: 'Note',
-			type: 'Note',
-			default: false,
-			order: 0,
-			parentPage: 5,
-		},
-		{
-			id: 2,
-			title: 'Test Note',
-			type: 'Note',
-			default: false,
-			order: 1,
-		},
-		{
-			id: 3,
-			title: 'Test 3',
-			type: 'Todo',
-			default: false,
-			order: 3,
-		},
+		{id: 0, title: 'Default', type: 'Todo', default: true, order: 0},	
+		{id: 1, title: 'Folder', type: 'Folder', open: false, order: 2, childPages: [4, 5]},
+		{id: 4, title: 'Sub todo', type: 'Todo', default: false,order: 0, parentPage: 1},
+		{id: 5, title: 'Sub folder', type: 'Folder', open: true, order: 1, parentPage: 1, childPages: [6]},
+		{id: 6, title: 'Note', type: 'Note', default: false, order: 0, parentPage: 5},
+		{id: 2, title: 'Test Note', type: 'Note', default: false, order: 1},
+		{id: 3, title: 'Test 3', type: 'Todo', default: false, order: 3},
 	]);
 
 	selectedPage.set($pages.find(page => page.default));
