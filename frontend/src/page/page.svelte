@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from 'svelte';
+    import { onMount, getContext } from 'svelte';
     import dragula from 'dragula';
     import MdMoreVert from 'svelte-icons/md/MdMoreVert.svelte'
     import PageTypes from '../navigation/page-types.js';
@@ -12,6 +12,8 @@
     import { pages } from './pages.store.js';
     import { notes } from '../note/notes.store.js';
     import { filter } from './filter.store.js';
+
+    const { open } = getContext('modal');
 
     export let id;
     export let title = 'hey';
@@ -27,12 +29,14 @@
         {
             name: 'Delete page',
             action: () => {
-                if ($selectedPage.id === id) {
-                    selectedPage.set(null);
-                }
-                
-                notes.deletePageNotes(id, $pages);
-                pages.deletePage(id);
+                open('Are you sure?', () => {
+                    if ($selectedPage.id === id) {
+                        selectedPage.set(null);
+                    }
+                    
+                    notes.deletePageNotes(id, $pages);
+                    pages.deletePage(id);
+                });
             }
         }
     ];
@@ -101,7 +105,7 @@
 <style>
     .page {
         padding: 10px;
-        margin: 10px;
+        margin: 10px 10px 50px;
         display: grid;
     }
     .title {

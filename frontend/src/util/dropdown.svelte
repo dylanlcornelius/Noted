@@ -29,8 +29,9 @@
     }
     .dropdown-container {
         position: absolute;
-        border: 1px solid #999;
-        background-color: #273b4d;
+        border: 1px solid #696969;
+        border-radius: 3px;
+        background-color: #343434;
         box-sizing: border-box;
         min-width: 100%;
         box-shadow: 3px 5px 15px -2px rgba(0,0,0,0.5);

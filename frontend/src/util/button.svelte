@@ -1,6 +1,7 @@
 <script>
     import { createEventDispatcher } from 'svelte';
 
+    export let decorated = false;
     export let selected = false;
     export let handle = false;
 
@@ -29,6 +30,12 @@
         text-align: start;
         margin: 0;
     }
+    .decorated {
+        border: 1px solid #444444;
+        border-radius: 3px;
+        background-color: #2b3446;
+        margin-right: 10px;
+    }
     .selected {
 		background-color: #12a0f2;
 	}
@@ -36,12 +43,16 @@
 		.button:hover {
             color: #aaa;
         }
+        .decorated:hover {
+        background-color: #1d2534;
+        color: #eee;
+    }
         .selected:hover {
             color: #444;
         }
 	}
 </style>
 
-<button class="button" on:click={handleClick} class:selected={selected} class:handle={handle}>
+<button class="button" on:click={handleClick} class:selected class:handle class:decorated>
     <slot></slot>
 </button>

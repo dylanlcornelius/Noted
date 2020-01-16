@@ -1,4 +1,5 @@
 <script>
+	import Modal from './util/modal.svelte';
 	import Header from './header/header.svelte';
 	import Navigation from './navigation/navigation.svelte';
 	import Page from './page/page.svelte';
@@ -63,14 +64,16 @@
 </style>
 
 <div class="app">
-	<Header/>
-	<div class="content">
-		<Navigation/>
-		
-		{#if $selectedPage}
-			<div class="page">
-				<Page id={$selectedPage.id} title={$selectedPage.title} type={$selectedPage.type}/>
-			</div>
-		{/if}
-	</div>
+	<Modal>
+		<Header/>
+		<div class="content">
+			<Navigation/>
+			
+			{#if $selectedPage}
+				<div class="page">
+					<Page id={$selectedPage.id} title={$selectedPage.title} type={$selectedPage.type}/>
+				</div>
+			{/if}
+		</div>
+	</Modal>
 </div>
