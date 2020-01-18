@@ -11,7 +11,9 @@
 </script>
 
 <style>
-
+    .checkbox {
+        margin: auto 5px;
+    }
 </style>
 
-<input type="checkbox" bind:checked={value} on:change={handleChange} />
+<input class="checkbox" type="checkbox" bind:checked={value} on:change={handleChange} />

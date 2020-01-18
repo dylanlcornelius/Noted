@@ -1,11 +1,8 @@
-<script>
-
-</script>
-
 <style>
     h1 {
         text-align: center;
+        margin-top: 0;
     }
 </style>
 
-<h1>Title!</h1>
+<h1>Noted</h1>

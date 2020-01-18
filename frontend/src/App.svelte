@@ -1,72 +1,36 @@
 <script>
+	import Modal from './util/modal.svelte';
 	import Header from './header/header.svelte';
-	import PageNavigation from './page/page-navigation.svelte';
+	import Navigation from './navigation/navigation.svelte';
 	import Page from './page/page.svelte';
+	import { pages } from './page/pages.store.js';
+	import { notes } from './note/notes.store.js';
+	import { selectedPage } from './navigation/selected-page.store.js';
 
 	export let name;
 
-	let pages = [
-		{
-			id: 1,
-			title: 'Default',
-			type: 'TODO',
-			default: true,
-			notes: [{id: 1, content: 'first', order: 1, completed: false}, {id: 2, content: 'second', order: 2, completed: false}],
-		},
-		{
-			id: 2,
-			title: 'Folder',
-			type: 'FOLDER',
-			default: false,
-			notes: [],
-			pages: [
-				{
-					id: 5,
-					title: 'Sub todo',
-					type: 'TODO',
-					default: false,
-					notes: [{id: 3, content: 'first', order: 1, completed: false}, {id: 4, content: 'second', order: 2, completed: false}],
-				},
-				{
-					id: 6,
-					title: 'Sub folder',
-					type: 'FOLDER',
-					default: false,
-					notes: [],
-					pages: [
-						{
-							id: 7,
-							title: 'List',
-							type: 'LIST',
-							default: false,
-							notes: [{id: 3, content: 'this', order: 1}, {id: 4, content: 'that', order: 2}]
-						}
-					]
-				}
-			]
-			
-		},
-		{
-			id: 3,
-			title: 'Test 2',
-			type: 'LIST',
-			default: false,
-			notes: [{id: 5, content: 'first', order: 1}, {id: 6, content: 'second', order: 2}],
-		},
-		{
-			id: 4,
-			title: 'Test 3',
-			type: 'TODO',
-			default: false,
-			notes: [{id: 3, content: 'first', order: 1, completed: false}, {id: 4, content: 'second', order: 2, completed: false}],
-		},
-	];
+	pages.set([
+		{id: 0, title: 'Default', type: 'Todo', default: true, order: 0},	
+		{id: 1, title: 'Folder', type: 'Folder', open: false, order: 2, childPages: [4, 5]},
+		{id: 4, title: 'Sub todo', type: 'Todo', default: false,order: 0, parentPage: 1},
+		{id: 5, title: 'Sub folder', type: 'Folder', open: true, order: 1, parentPage: 1, childPages: [6]},
+		{id: 6, title: 'Note', type: 'Note', default: false, order: 0, parentPage: 5},
+		{id: 2, title: 'Test Note', type: 'Note', default: false, order: 1},
+		{id: 3, title: 'Test 3', type: 'Todo', default: false, order: 3},
+	]);
 
-	let selectedPage = pages.find(page => page.default);
+	selectedPage.set($pages.find(page => page.default));
 
-	function handleSelectPage(event) {
-		selectedPage = event.detail.page;
-	}
+	notes.set([
+		{id: 0, content: 'first', order: 0, completed: true, page: 0},
+		{id: 1, content: 'second', order: 1, completed: false, page: 0},
+		{id: 9, content: 'third', order: 2, completed: false, page: 0},
+		{id: 2, content: 'sub 1', order: 0, completed: false, page: 4},
+		{id: 3, content: 'sub 2', order: 1, completed: false, page: 4},
+		{id: 4, content: 'this note', order: 0, page: 6},
+		{id: 6, content: 'test note', order: 0, page: 2},
+		{id: 8, content: 'first 3', order: 0, completed: false, page: 3},
+	]);
 </script>
 
 <style>
@@ -88,39 +52,28 @@
 		margin: auto;
 		display: flex;
 	}
-	.navigation {
-		border-right: 1px solid #505b66;
-        padding: 10px;
-        margin: 10px;
-		display: flex;
-		flex-direction: column;
-        align-items: start;
-	}
 	.page {
 		width: 100%;
 	}
 	@media only screen and (max-width: 767px) {
 		.content {
+			width: 100%;
 			display: block;
-		}
-		.navigation {
-			border-right: none;
-			border-bottom: 1px solid #505b66;
 		}
 	}
 </style>
 
 <div class="app">
-	<Header/>
-	<div class="content">
-		<div class="navigation">
-			{#each pages as page (page.id)}
-				<PageNavigation page={page} selectedPage={selectedPage} on:selectPage={handleSelectPage}/>
-			{/each}
+	<Modal>
+		<Header/>
+		<div class="content">
+			<Navigation/>
+			
+			{#if $selectedPage}
+				<div class="page">
+					<Page id={$selectedPage.id} title={$selectedPage.title} type={$selectedPage.type}/>
+				</div>
+			{/if}
 		</div>
-		
-		<div class="page">
-			<Page title={selectedPage.title} notes={selectedPage.notes} type={selectedPage.type}/>
-		</div>
-	</div>
+	</Modal>
 </div>

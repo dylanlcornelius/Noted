@@ -1,6 +1,12 @@
 <script>
     import { createEventDispatcher } from 'svelte';
+    import MdClose from 'svelte-icons/md/MdClose.svelte';
+    import MdDragHandle from 'svelte-icons/md/MdDragHandle.svelte';
+    import PageTypes from '../navigation/page-types.js';
+    import Button from '../util/button.svelte';
     import Checkbox from '../util/checkbox.svelte';
+    import TextBox from '../util/text-box.svelte';
+    import { notes } from './notes.store.js';
 
     export let id;
     export let content;
@@ -9,43 +15,57 @@
 
     const dispatch = createEventDispatcher();
 
-    function deleteNote() {
-        dispatch('deleteNote', {
-            id: id
-        });
-    }
-
     function toggleComplete() {
-        dispatch('toggleComplete', {
-            id: id
-        });
+        notes.toggleComplete(id);
+    }
+    function updateContent(event) {
+        notes.updateContent(id, event.detail.content);
+    }
+    function deleteNote() {
+        notes.deleteNote(id);
     }
 </script>
 
 <style>
     .note {
         display: flex;
-        align-items: cetner;
+        align-items: center;
         justify-content: space-between;
         animation-duration: 0.3s;
         margin-bottom: 15px;
+    }
+    .content-container {
+        display: flex;
+        width: 100%;
+    }
+    .todo-container {
+        display: flex;
     }
     .completed {
         text-decoration: line-through;
         color: grey;
     }
+    .drag-icon {
+        pointer-events: none;
+    }
 </style>
 
-<div class="note">
-    <div class:completed={completed}>
-        {#if type === 'TODO'}
+<div class="note" id={id}>
+    <div class="content-container" class:completed={completed}>
+        {#if type === PageTypes.TODO}
             <Checkbox bind:value={completed} on:toggle={toggleComplete}/>
+            <TextBox content={content} editor={true} on:update={updateContent}/>
         {/if}
-        {content}
     </div>
-    {#if type === 'TODO'}
-        <div on:click={deleteNote}>
-            x
+    {#if type === PageTypes.TODO}
+        <div class="todo-container">
+            <Button handle={true}>
+                <div class="icon drag-icon"><MdDragHandle/></div>
+            </Button>
+
+            <Button on:click={deleteNote}>
+                <div class="icon"><MdClose/></div>
+            </Button>
         </div>
     {/if}
 </div>
