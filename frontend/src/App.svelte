@@ -1,13 +1,9 @@
 <script>
 	import Modal from './util/modal.svelte';
 	import Header from './header/header.svelte';
-	import Navigation from './navigation/navigation.svelte';
-	import Page from './page/page.svelte';
+	import Router from './router/router.svelte';
 	import { pages } from './page/pages.store.js';
 	import { notes } from './note/notes.store.js';
-	import { selectedPage } from './navigation/selected-page.store.js';
-
-	export let name;
 
 	pages.set([
 		{id: 0, title: 'Default', type: 'Todo', default: true, order: 0},	
@@ -19,7 +15,6 @@
 		{id: 3, title: 'Test 3', type: 'Todo', default: false, order: 3},
 	]);
 
-	selectedPage.set($pages.find(page => page.default));
 
 	notes.set([
 		{id: 0, content: 'first', order: 0, completed: true, page: 0},
@@ -52,9 +47,6 @@
 		margin: auto;
 		display: flex;
 	}
-	.page {
-		width: 100%;
-	}
 	@media only screen and (max-width: 767px) {
 		.content {
 			width: 100%;
@@ -63,17 +55,12 @@
 	}
 </style>
 
+
 <div class="app">
 	<Modal>
 		<Header/>
 		<div class="content">
-			<Navigation/>
-			
-			{#if $selectedPage}
-				<div class="page">
-					<Page id={$selectedPage.id} title={$selectedPage.title} type={$selectedPage.type}/>
-				</div>
-			{/if}
+			<Router/>
 		</div>
 	</Modal>
 </div>

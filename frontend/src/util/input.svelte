@@ -1,6 +1,7 @@
 <script>
     import { createEventDispatcher } from 'svelte';
 
+    export let type = "text";
     export let placeholder;
     export let value;
 
@@ -18,6 +19,8 @@
         background: none;
         border: none;
         color: white;
+        margin: 0;
+        width: 100%;
     }
     input:focus {
         outline: none;
@@ -28,4 +31,8 @@
     }
 </style>
 
-<input type="text" placeholder={placeholder} bind:value on:keydown={add}/>
+{#if type === "password"}
+    <input type="password" placeholder={placeholder} bind:value on:keydown={add}/>
+{:else}
+    <input type="text" placeholder={placeholder} bind:value on:keydown={add}/>
+{/if}
