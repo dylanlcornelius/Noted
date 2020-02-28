@@ -42,14 +42,18 @@
     }
 </script>
 
-<style>
+<style type="text/scss">
+    @import "../theme";
+
     .form {
-        margin: auto;
-        min-width: 300px;
-        padding: 15px;
-        border: 1px solid #696969;
+        background-color: $theme-background-secondary-color;
         border-radius: 3px;
-        background-color: #343434;
+        box-shadow: 5px 7px 10px 0px rgba(0,0,0,0.6);
+        margin: auto;
+        max-width: 400px;
+        min-width: 250px;
+        padding: 15px;
+        border-radius: 3px;
     }
     h3 {
         text-align: center;
@@ -59,11 +63,15 @@
     }
     .input {
         width: 100%;
-        border: 1px solid #696969;
+        border: 1px solid $theme-border-color;
         border-radius: 3px;
     }
+    .input::placeholder {
+        color: $theme-text-color;
+        opacity: 0.6;
+    }
     .error {
-        color: #cf0d0d;
+        color: $theme-text-error-color;
         max-width: 300px;
         padding-left: 0.4em;
     }

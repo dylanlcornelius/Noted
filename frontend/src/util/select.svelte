@@ -13,7 +13,7 @@
     });
 </script>
 
-<style>
+<style type="text/scss">
     .selected {
         display: flex;
         padding: 0.4em;

@@ -10,7 +10,7 @@
     }
 </script>
 
-<style>
+<style type="text/scss">
     a {
         text-decoration: none;
         color: inherit;

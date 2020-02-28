@@ -46,9 +46,11 @@
     });
 </script>
 
-<style>
+<style type="text/scss">
+    @import "../theme";
+
     .navigation {
-		border-right: 2px solid #505b66;
+		border-right: 2px solid $theme-border-color;
         padding: 10px;
         margin: 10px;
 	}
@@ -56,12 +58,12 @@
         display: flex;
     }
     .pages {
-        border-bottom: 1px solid #505b66;
+        border-bottom: 1px solid $theme-border-color;
     }
 	@media only screen and (max-width: 767px) {
 		.navigation {
 			border-right: none;
-			border-bottom: 1px solid #505b66;
+			border-bottom: 1px solid $theme-border-color;
 		}
 	}
 </style>

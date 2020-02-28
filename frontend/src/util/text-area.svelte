@@ -3,7 +3,9 @@
     export let wrap;
 </script>
 
-<style>
+<style type="text/scss">
+    @import "../theme";
+
     .container {
         position: relative;
         height: 100%;
@@ -18,7 +20,7 @@
         font-family: inherit;
         padding: 5px;
         box-sizing: border-box;
-        border: solid 1px rgb(13, 121, 221);
+        border: solid 1px $theme-selected-color;
         border-radius: 3px;
         line-height: normal;
         overflow: hidden;
@@ -30,7 +32,7 @@
     }
     textarea {
         background: none;
-        color: #ececec;
+        color: $theme-text-color;
         position: absolute;
         width: 100%;
         height: 100%;

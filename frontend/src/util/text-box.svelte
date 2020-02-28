@@ -20,7 +20,7 @@
     }
 </script>
 
-<style>
+<style type="text/scss">
     .content {
         padding: 6px;
         white-space: pre;

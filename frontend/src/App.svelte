@@ -28,39 +28,27 @@
 	]);
 </script>
 
-<style>
+<style type="text/scss">
+	@import "theme";
+
 	:global(body) {
 		padding: 0;
 		overflow: auto;
 	}
 	.app {
-		background-color: #273b4d;
+		background-color: $theme-background-color;
+		color: $theme-text-color;
 		display: inline-block;	
 		width: 100%;
 		min-height: 100vh;
-		color: #ececec;
 		padding: 2%;
 		box-sizing: border-box;
 	}
-	.content {
-		width: 90%;
-		margin: auto;
-		display: flex;
-	}
-	@media only screen and (max-width: 767px) {
-		.content {
-			width: 100%;
-			display: block;
-		}
-	}
 </style>
-
 
 <div class="app">
 	<Modal>
 		<Header/>
-		<div class="content">
-			<Router/>
-		</div>
+		<Router/>
 	</Modal>
 </div>

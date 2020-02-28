@@ -10,7 +10,7 @@
     }
 </script>
 
-<style>
+<style type="text/scss">
     .nav {
         display: flex;
         justify-content: flex-end;
@@ -23,7 +23,9 @@
 
 <div class="nav">
     {#if $loggedIn}
-        <RouterLink path="/login" action={logout}>Logout</RouterLink>
+        <RouterLink path="/login" action={logout}>
+            <Button>Logout</Button>
+        </RouterLink>
     {/if}
 </div>
 <h1>Noted</h1>

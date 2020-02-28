@@ -26,7 +26,7 @@
     }
 </script>
 
-<style>
+<style type="text/scss">
     .note {
         display: flex;
         align-items: center;

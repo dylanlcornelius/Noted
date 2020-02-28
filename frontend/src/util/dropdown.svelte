@@ -11,7 +11,9 @@
     }
 </script>
 
-<style>
+<style type="text/scss">
+    @import "../theme";
+
     .hide {
         display: none;
     }
@@ -29,18 +31,17 @@
     }
     .dropdown-container {
         position: absolute;
-        border: 1px solid #696969;
-        border-radius: 3px;
-        background-color: #343434;
+        border-radius: 2px;
+        background-color: $theme-background-alternative-color;
         box-sizing: border-box;
         min-width: 100%;
-        box-shadow: 3px 5px 15px -2px rgba(0,0,0,0.5);
+        box-shadow: 3px 4px 10px 0px rgba(0, 0, 0, 0.5);
     }
     .right {
         right: 0;
     }
     .option:not(:last-child) {
-        border-bottom: 1px solid #505b66;
+        border-bottom: 1px solid $theme-border-alternative-color;
     }
 </style>
 

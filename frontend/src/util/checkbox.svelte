@@ -10,7 +10,7 @@
     }
 </script>
 
-<style>
+<style type="text/scss">
     .checkbox {
         margin: auto 5px;
     }

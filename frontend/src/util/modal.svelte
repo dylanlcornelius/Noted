@@ -23,7 +23,9 @@
     }
 </script>
 
-<style>
+<style type="text/scss">
+    @import "../theme";
+
     .hide {
         display: none;
     }
@@ -44,16 +46,15 @@
         left: 50%;
         transform: translate(-50%, -50%);
         width: 300px;
-        border: 1px solid #696969;
         border-radius: 3px;
-        background-color: #343434;
+        background-color: $theme-background-alternative-color;
         box-sizing: border-box;
         box-shadow: 10px 5px 15px -2px rgba(0,0,0,0.5);
         padding: 25px;
     }
     .text {
         padding: 0.4em;
-        margin-bottom: 20px;
+        margin: 10px 0 20px;
         text-align: center;
     }
     .button-container {

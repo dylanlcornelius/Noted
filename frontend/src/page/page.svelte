@@ -102,10 +102,12 @@
     });
 </script>
 
-<style>
+<style type="text/scss">
+    @import "../theme";
+
     .page {
         padding: 10px;
-        margin: 10px 10px 50px;
+        margin: 10px 10px 60px;
         display: grid;
     }
     .title {
@@ -120,7 +122,7 @@
         justify-content: space-between;
         padding-top: 15px;
         margin-bottom: 15px;
-        border-top: 1px solid #505b66;
+        border-top: 1px solid $theme-border-color;
     }
     .filters-container {
         display: flex;

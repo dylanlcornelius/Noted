@@ -14,11 +14,13 @@
     }
 </script>
 
-<style>
+<style type="text/scss">
+    @import "../theme";
+
     input {
         background: none;
         border: none;
-        color: white;
+        color: $theme-text-color;
         margin: 0;
         width: 100%;
     }
@@ -26,7 +28,7 @@
         outline: none;
     }
     input::placeholder {
-        color: white;
+        color: $theme-text-color;
         opacity: 0.6;
     }
 </style>

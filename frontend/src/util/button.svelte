@@ -12,7 +12,9 @@
     }
 </script>
 
-<style>
+<style type="text/scss">
+    @import "../theme";
+
     :global(.icon) {
         height: 15px;
         width: 15px;
@@ -20,35 +22,39 @@
         float: right;
     }
     .button {
+        border-radius: 2px;
         display: flex;
         width: inherit;
         border: none;
-        border-radius: 1px;
         background: none;
         white-space: nowrap;
-        color: #eee;
+        color: $theme-text-color;
         text-align: start;
         margin: 0;
+        transform: perspective(1px) translateZ(0);
+        transition-duration: 0.2s;
+        transition-property: color, background-color;
     }
     .decorated {
-        border: 1px solid #444444;
-        border-radius: 3px;
-        background-color: #2b3446;
+        background-color: $theme-primary-color;
+        color: $theme-text-dark-color;
         margin-right: 10px;
+        font-weight: 600;
     }
     .selected {
-		background-color: #12a0f2;
+        background-color: $theme-selected-color;
 	}
     @media only screen and (min-width: 768px) {
 		.button:hover {
-            color: #aaa;
+            color: $theme-text-hover-color;
         }
         .decorated:hover {
-        background-color: #1d2534;
-        color: #eee;
-    }
+            background-color: $theme-primary-hover-color;
+            color: $theme-text-color;
+        }
         .selected:hover {
-            color: #444;
+            background-color: $theme-selected-hover-color;
+            color: $theme-text-color;
         }
 	}
 </style>

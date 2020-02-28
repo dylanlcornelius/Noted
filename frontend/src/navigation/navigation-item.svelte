@@ -82,12 +82,14 @@
     });
 </script>
 
-<style>
+<style type="text/scss">
+    @import "../theme";
+
     :global(.folder-icon svg) {
         vertical-align: middle;
     }
     :global(.gu-mirror) {
-        color: #eee;
+        color: $theme-text-color;
     }
     .page-container {
         display: flex;
