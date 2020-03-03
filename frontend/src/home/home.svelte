@@ -4,8 +4,6 @@
     import Page from '../page/page.svelte';
 	import { pages } from '../page/pages.store.js';
 	import { selectedPage } from '../navigation/selected-page.store.js';
-
-	selectedPage.set($pages.find(page => page.default));
 </script>
 
 <style type="text/scss">

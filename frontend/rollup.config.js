@@ -4,6 +4,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import autoPreprocess from 'svelte-preprocess';
+import { injectManifest } from 'rollup-plugin-workbox';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -16,6 +17,18 @@ export default {
 		file: 'public/bundle.js'
 	},
 	plugins: [
+		injectManifest({
+			swSrc: './sw.js',
+			swDest: './public/sw.js',
+			globDirectory: './public',
+			globPatterns: [
+				'bundle.*',
+				'favicon.png',
+				'global.css',
+				'index.html',
+				'manifest.json'
+			]
+		}),
 		svelte({
 			// enable run-time checks when not in production
 			dev: !production,

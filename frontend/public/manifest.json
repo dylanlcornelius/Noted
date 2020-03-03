@@ -1,0 +1,8 @@
+{
+    "name": "Noted",
+    "short_name": "Noted",
+    "lang": "en-US",
+    "start_url": "index.html",
+    "display": "standalone",
+    "theme_color": "#1f2f44"
+}

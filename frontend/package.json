@@ -14,6 +14,8 @@
     "svelte-preprocess": "^3.4.0"
   },
   "dependencies": {
+    "idb": "^5.0.1",
+    "rollup-plugin-workbox": "^5.0.1",
     "sirv-cli": "^0.4.4",
     "svelte-icons": "^1.1.0"
   },
