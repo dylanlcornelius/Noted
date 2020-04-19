@@ -12,30 +12,32 @@
     import { pages } from './pages.store.js';
     import { notes } from '../note/notes.store.js';
     import { filter } from './filter.store.js';
+    import PageService from './page.service.js';
+    import NoteService from '../note/note.service.js';
 
     const { open } = getContext('modal');
 
-    export let id;
-    export let title = 'hey';
-    export let type;
+    export let page;
 
     const options = [
         {
             name: 'Set as default',
             action: () => {
-                pages.updateDefault(id);
+                pages.updateDefault(page.id);
+                PageService.put($pages);
             }
         },
         {
             name: 'Delete page',
             action: () => {
                 open('Are you sure?', () => {
-                    if ($selectedPage.id === id) {
+                    if ($selectedPage.id === page.id) {
                         selectedPage.set(null);
                     }
                     
-                    notes.deletePageNotes(id, $pages);
-                    pages.deletePage(id);
+                    notes.deletePageNotes(page.id, $pages);
+                    pages.deletePage(page.id);
+                    PageService.delete(page.id);
                 });
             }
         }
@@ -44,7 +46,7 @@
     let newNote = '';
     let drake;
 
-    $: pageNotes = $notes.filter(note => note.page === id);
+    $: pageNotes = $notes.filter(note => note.page === page.id);
     $: notesLeft = pageNotes.filter(note => !note.completed).length;
     $: filteredNotes = ($filter === 'ALL'
         ? pageNotes
@@ -53,7 +55,7 @@
             : pageNotes.filter(note => !note.completed)
     ).sort((a, b) => a.order - b.order);
     $: {
-        if (type === PageTypes.TODO) {
+        if (page.type === PageTypes.TODO) {
             initDND();
         } else if (drake) {
             drake.destroy();
@@ -61,18 +63,21 @@
     };
 
     function updatePage(event) {
-        pages.updateTitle(id, event.detail.content);
-        if ($selectedPage && id === $selectedPage.id) {
-            const newPage = $pages.find(p => p.id === id);
+        pages.updateTitle(page.id, event.detail.content);
+        PageService.put([{...page, title: event.detail.content}]);
+        if ($selectedPage && page.id === $selectedPage.id) {
+            const newPage = $pages.find(p => p.id === page.id);
             selectedPage.set(newPage);
         }
     }
     function addNote(event) {
-        notes.addNote(id, newNote);
+        notes.addNote(page.id, pageNotes.length, newNote);
+        NoteService.post({content: newNote, order: pageNotes.length, page: page.id});
         newNote = '';
     }
     function checkAllNotes(event) {
-        notes.toggleAll(id, event.target.checked);
+        notes.toggleAll(page.id, event.target.checked);
+        NoteService.put(pageNotes);        
     }
     function updateFilter(newFilter) {
         filter.set(newFilter);
@@ -92,7 +97,8 @@
             });
 
             drake.on('drop', (el, target, source, sibling) => {
-                notes.updateOrder(el.id, [].slice.call(el.parentNode.children).findIndex((item) => el === item), id);
+                notes.updateOrder(el.id, [].slice.call(el.parentNode.children).findIndex((item) => el === item), page.id);
+                NoteService.put(pageNotes);
             });
         }
     }
@@ -129,19 +135,19 @@
 
 <div class="page">
     <div class="title">
-        <TextBox content={title} on:update={updatePage}/>
+        <TextBox content={page.title} on:update={updatePage}/>
     </div>
-    {#if type === PageTypes.TODO}
+    {#if page.type === PageTypes.TODO}
         <Input placeholder="Add new item..." bind:value={newNote} on:add={addNote}/>
     {/if}
 
     <div id="notes">
         {#each filteredNotes as note (note.id)}
-            <Note id={note.id} content={note.content} completed={note.completed} type={type}/>
+            <Note note={note} type={page.type}/>
         {/each}
     </div>
 
-    {#if type === PageTypes.TODO}
+    {#if page.type === PageTypes.TODO}
         <div class="row-container">
             <div>
                 <input type="checkbox" on:change={checkAllNotes}/>

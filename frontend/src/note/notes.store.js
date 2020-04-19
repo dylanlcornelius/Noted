@@ -12,7 +12,7 @@ function createNoteStore() {
             set(store);
             id.reset(store);
         },
-        addNote: (pageId, content) => update(store => {
+        addNote: (pageId, order, content) => update(store => {
             const newId = get(id);
             id.increment();
 
@@ -22,7 +22,7 @@ function createNoteStore() {
                     id: newId,
                     content: content,
                     completed: false,
-                    order: store.length,
+                    order: order,
                     page: pageId,
                 }
             ];

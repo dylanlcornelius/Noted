@@ -12,12 +12,13 @@
     import { filter } from '../page/filter.store.js';
     import { pages } from '../page/pages.store.js';
     import { notes } from '../note/notes.store.js';
+    import PageService from '../page/page.service.js';
     
     export let page;
 
     const dispatch = createEventDispatcher();
 
-    let showSubPages = hasDefault() || page.open;
+    let showSubPages = hasDefault() || page.isOpen;
 
     $: selected = $selectedPage && page.id === $selectedPage.id;
     $: childrenPages = $pages
@@ -31,22 +32,22 @@
 
     function hasDefault() {
         let allPages = $pages;
-        let pagesToDelete = [page.id];
+        let subPages = [page.id];
 
         let hasDefault = false;
 
-        while (pagesToDelete.length > 0) {
+        while (subPages.length > 0) {
             allPages.forEach(page => {
-                if (page.id === pagesToDelete[0]) {
+                if (page.id === subPages[0]) {
                     if (page.childPages) {
-                        pagesToDelete = pagesToDelete.concat(page.childPages);
+                        subPages = subPages.concat(page.childPages);
                     }
 
                     hasDefault |= page.default;
                 }
             });
 
-            pagesToDelete.shift();
+            subPages.shift();
         }
 
         return hasDefault;
@@ -54,6 +55,7 @@
     function toggleSubPages() {
         showSubPages = !showSubPages;
         pages.updateOpen(page.id, showSubPages);
+        PageService.put([{...page, isOpen: showSubPages}]);
     }
     function selectPage() {
         selectedPage.set(page);
@@ -61,6 +63,7 @@
     }
     function updatePage(event) {
         pages.updateTitle(page.id, event.detail.content);
+        PageService.put([{...page, title: event.detail.content}]);
         if (selected) {
             const newPage = $pages.find(p => p.id === page.id);
             selectedPage.set(newPage);
@@ -73,6 +76,7 @@
 
         notes.deletePageNotes(page.id, $pages);
         pages.deletePage(page.id);
+        PageService.delete(page.id);
     }
 
     afterUpdate(() => {

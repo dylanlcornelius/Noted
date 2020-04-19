@@ -7,22 +7,24 @@
     import Checkbox from '../util/checkbox.svelte';
     import TextBox from '../util/text-box.svelte';
     import { notes } from './notes.store.js';
+    import NoteService from './note.service.js';
 
-    export let id;
-    export let content;
-    export let completed;
+    export let note;
     export let type;
 
     const dispatch = createEventDispatcher();
 
     function toggleComplete() {
-        notes.toggleComplete(id);
+        notes.toggleComplete(note.id);
+        NoteService.put([{...note, completed: !note.completed}]);
     }
     function updateContent(event) {
-        notes.updateContent(id, event.detail.content);
+        notes.updateContent(note.id, event.detail.content);
+        NoteService.put([{...note, content: event.detail.content}]);
     }
     function deleteNote() {
-        notes.deleteNote(id);
+        notes.deleteNote(note.id);
+        NoteService.delete(note.id);
     }
 </script>
 
@@ -50,11 +52,11 @@
     }
 </style>
 
-<div class="note" id={id}>
-    <div class="content-container" class:completed={completed}>
+<div class="note" id={note.id}>
+    <div class="content-container" class:completed={note.completed}>
         {#if type === PageTypes.TODO}
-            <Checkbox bind:value={completed} on:toggle={toggleComplete}/>
-            <TextBox content={content} editor={true} on:update={updateContent}/>
+            <Checkbox value={note.completed} on:toggle={toggleComplete}/>
+            <TextBox content={note.content} editor={true} on:update={updateContent}/>
         {/if}
     </div>
     {#if type === PageTypes.TODO}

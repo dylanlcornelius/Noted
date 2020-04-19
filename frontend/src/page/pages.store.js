@@ -44,12 +44,12 @@ function createPageStore() {
                 return page;
             });
         }),
-        updateOpen: (id, open) => update(store => {
+        updateOpen: (id, isOpen) => update(store => {
             const pageIndex = store.findIndex(page => page.id === id);
 
             return [
                 ...store.slice(0, pageIndex),
-                {...store[pageIndex], open: open},
+                {...store[pageIndex], isOpen: isOpen},
                 ...store.slice(pageIndex + 1)
             ];
         }),
@@ -68,7 +68,7 @@ function createPageStore() {
                     page.parentPage = parentPageId;
                 } else if (isReorder) {
                     // reorder inside same folder
-                    if (page.parentPage === parentPageId) {
+                    if (page.parentPage == parentPageId) {
                         if (isGreater && page.order <= index && page.order > oldOrder) {
                             page.order--;
                         } else if (page.order >= index && page.order < oldOrder) {
@@ -86,9 +86,9 @@ function createPageStore() {
                         page.childPages.push(id);
                     }
                     
-                    if (page.parentPage === oldParentPageId && page.order >= oldOrder) {
+                    if (page.parentPage == oldParentPageId && page.order >= oldOrder) {
                         page.order--;
-                    } else if (page.parentPage === parentPageId && page.order >= index) {
+                    } else if (page.parentPage == parentPageId && page.order >= index) {
                         page.order++;
                     }
                 }

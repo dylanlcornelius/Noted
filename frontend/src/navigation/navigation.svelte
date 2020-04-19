@@ -8,6 +8,7 @@
     import Select from '../util/select.svelte';
     import { editState } from './edit-state.store.js';
     import { pages } from '../page/pages.store.js';
+    import PageService from '../page/page.service';
 
     let newPageTitle = '';
     let newPageType = PageTypes.FOLDER;
@@ -17,6 +18,7 @@
 
     function addPage() {
         pages.addPage(newPageTitle, newPageType);
+        PageService.post({title: newPageTitle, type: newPageType});
         newPageTitle = '';
     }
 
@@ -38,6 +40,7 @@
 
         drake.on('drop', (el, target, source, sibling) => {
             pages.updateOrder(el.id, [].slice.call(el.parentNode.children).findIndex((item) => el === item), target.id, source.id);
+            PageService.put($pages);
         });
     }
 

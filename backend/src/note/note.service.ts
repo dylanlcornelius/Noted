@@ -1,48 +1,21 @@
-import { connection } from '../util/connection';
+import query from '../database/database';
 import { Note } from './note.model';
 
-export default class PageService {
-    static getNotes(uid: string) {
-        return new Promise((resolve, reject) => {
-            connection.query('SELECT * FROM public.notes WHERE "Uid" = ?;', [uid], (error, response) => {
-                if (error) {
-                    reject(error);
-                }
-                resolve(response.rows);
-            });
-        });
-    }
-
-    static postNote(uid: string) {
-        return new Promise((resolve, reject) => {
-            connection.query('INSERT INTO public.notes (uid) VALUES (?);', [uid], (error, response) => {
-                if (error) {
-                    reject(error);
-                }
-                resolve(response.rows);
-            });
-        });
-    }
-
-    static putNote(note: Note) {
-        return new Promise((resolve, reject) => {
-            connection.query('UPDATE public.notes SET title = ? WHERE id = ?', [note.content, note.id], (error, response) => {
-                if (error) {
-                    reject(error);
-                }
-                resolve(response.rows);
-            })
-        });
-    }
-
-    static deleteNote(id: string) {
-        return new Promise((resolve, reject) => {
-            connection.query('DELETE FROM public.notes WHERE id = ?', [id], (error, response) => {
-                if (error) {
-                    reject(error);
-                }
-                resolve(response.rows);
-            })
-        });
+export default {
+    getNotes(author: string) {
+        return query('SELECT * FROM public.notes WHERE author = $1;', [author]);
+    },
+    postNote(content: string, order: number, page: string, uid: string) {
+        
+        return query('INSERT INTO public.notes (content, "order", completed, page, author) VALUES ($1, $2, $3, $4, $5);', [content, order, false, page, uid]);
+    },
+    putNote(note: Note, uid: String) {
+        return query('UPDATE public.notes SET content=$1, "order"=$2, completed=$3, editor=$4 WHERE id=$5', [note.content, note.order, note.completed, uid, note.id]);
+    },
+    deleteNote(id: string) {
+        return query('DELETE FROM public.notes WHERE id = $1', [id]);
+    },
+    deletePageNotes(pageId: string) {
+        return query('DELETE FROM public.notes WHERE page = $1', [pageId]);
     }
 }
