@@ -37,7 +37,7 @@
         });
 
         drake.on('drop', (el, target, source, sibling) => {
-            pages.updateOrder(el.id, [].slice.call(el.parentNode.children).findIndex((item) => el === item), target.id, source.id);
+            pages.updateOrder(el._id, [].slice.call(el.parentNode.children).findIndex((item) => el === item), target._id, source._id);
         });
     }
 
@@ -45,6 +45,29 @@
         initDND();
     });
 </script>
+
+<div class="navigation">
+    {#if $editState}
+        <div class="new-page-container">
+            <Select bind:value={newPageType} list={Object.values(PageTypes)}/>
+            <Input placeholder="Add new page..." bind:value={newPageTitle} on:add={addPage}/>
+        </div>
+    {/if}
+
+    <div class="pages">
+        {#each parentPages as page (page._id)}
+            <NavigationItem page={page} on:toggleShowSubPages={initDND}/>
+        {/each}
+    </div>
+
+    <Button on:click={editState.toggle}>
+        {#if $editState}
+            Done
+        {:else}
+            Edit
+        {/if}
+    </Button>
+</div>
 
 <style type="text/scss">
     @import "../theme";
@@ -67,26 +90,3 @@
 		}
 	}
 </style>
-
-<div class="navigation">
-    {#if $editState}
-        <div class="new-page-container">
-            <Select bind:value={newPageType} list={Object.values(PageTypes)}/>
-            <Input placeholder="Add new page..." bind:value={newPageTitle} on:add={addPage}/>
-        </div>
-    {/if}
-
-    <div class="pages">
-        {#each parentPages as page (page.id)}
-            <NavigationItem page={page} on:toggleShowSubPages={initDND}/>
-        {/each}
-    </div>
-
-    <Button on:click={editState.toggle}>
-        {#if $editState}
-            Done
-        {:else}
-            Edit
-        {/if}
-    </Button>
-</div>

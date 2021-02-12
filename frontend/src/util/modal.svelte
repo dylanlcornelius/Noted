@@ -23,6 +23,27 @@
     }
 </script>
 
+<div on:click={toggleVisibility}>
+    <div class="overlay" class:hide></div>
+    <div class="modal" class:hide>
+        <div class="modal-container">
+            <h3 class="text">
+                {text}
+            </h3>
+
+            <div class="button-container">
+                <Button decorated={true}>
+                    Cancel
+                </Button>
+                <Button on:click={handleAction} decorated={true}>
+                    Confirm
+                </Button>
+            </div>
+        </div>
+    </div>
+</div>
+<slot></slot>
+
 <style type="text/scss">
     @import "../theme";
 
@@ -62,24 +83,3 @@
         float: right;
     }
 </style>
-
-<div on:click={toggleVisibility}>
-    <div class="overlay" class:hide></div>
-    <div class="modal" class:hide>
-        <div class="modal-container">
-            <h3 class="text">
-                {text}
-            </h3>
-
-            <div class="button-container">
-                <Button decorated={true}>
-                    Cancel
-                </Button>
-                <Button on:click={handleAction} decorated={true}>
-                    Confirm
-                </Button>
-            </div>
-        </div>
-    </div>
-</div>
-<slot></slot>

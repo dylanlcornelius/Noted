@@ -13,15 +13,15 @@
     });
 </script>
 
+<Dropdown options={options}>
+    <div class="selected">
+        {value} <span class="icon"><MdArrowDropDown/></span>
+    </div>
+</Dropdown>
+
 <style type="text/scss">
     .selected {
         display: flex;
         padding: 0.4em;
     }
 </style>
-
-<Dropdown options={options}>
-    <div class="selected">
-        {value} <span class="icon"><MdArrowDropDown/></span>
-    </div>
-</Dropdown>

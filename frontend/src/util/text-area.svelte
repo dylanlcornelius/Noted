@@ -3,6 +3,12 @@
     export let wrap;
 </script>
 
+<div class="container">
+    <pre class:wrap aria-hidden="true">{value + '\n'}</pre>
+    <!-- svelte-ignore a11y-autofocus -->
+    <textarea bind:value autofocus/>
+</div>
+
 <style type="text/scss">
     @import "../theme";
 
@@ -43,9 +49,3 @@
         outline: none;
     }
 </style>
-
-<div class="container">
-    <pre class:wrap aria-hidden="true">{value + '\n'}</pre>
-    <!-- svelte-ignore a11y-autofocus -->
-    <textarea bind:value autofocus/>
-</div>

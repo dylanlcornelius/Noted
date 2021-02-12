@@ -5,7 +5,7 @@ export function generateId() {
 
     return {
         subscribe,
-        reset: store => set(Math.max(...store.map(value => value.id), 0) + 1),
+        reset: store => set(Math.max(...store.map(value => value._id), 0) + 1),
         increment: () => update(id => ++id)
     };
 }

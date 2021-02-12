@@ -12,6 +12,10 @@
     }
 </script>
 
+<button class="button" on:click={handleClick} class:selected class:handle class:decorated>
+    <slot></slot>
+</button>
+
 <style type="text/scss">
     @import "../theme";
 
@@ -58,7 +62,3 @@
         }
 	}
 </style>
-
-<button class="button" on:click={handleClick} class:selected class:handle class:decorated>
-    <slot></slot>
-</button>

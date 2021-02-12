@@ -30,7 +30,7 @@
             name: 'Delete page',
             action: () => {
                 open('Are you sure?', () => {
-                    if ($selectedPage.id === id) {
+                    if ($selectedPage._id === id) {
                         selectedPage.set(null);
                     }
                     
@@ -62,8 +62,8 @@
 
     function updatePage(event) {
         pages.updateTitle(id, event.detail.content);
-        if ($selectedPage && id === $selectedPage.id) {
-            const newPage = $pages.find(p => p.id === id);
+        if ($selectedPage && id === $selectedPage._id) {
+            const newPage = $pages.find(p => p._id === id);
             selectedPage.set(newPage);
         }
     }
@@ -92,7 +92,7 @@
             });
 
             drake.on('drop', (el, target, source, sibling) => {
-                notes.updateOrder(el.id, [].slice.call(el.parentNode.children).findIndex((item) => el === item), id);
+                notes.updateOrder(el._id, [].slice.call(el.parentNode.children).findIndex((item) => el === item), id);
             });
         }
     }
@@ -101,33 +101,6 @@
         initDND();
     });
 </script>
-
-<style type="text/scss">
-    @import "../theme";
-
-    .page {
-        padding: 10px;
-        margin: 10px 10px 60px;
-        display: grid;
-    }
-    .title {
-        font-size: 18px;
-        display: flex;
-        justify-content: center;
-        margin-bottom: 15px;
-    }
-    .row-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-top: 15px;
-        margin-bottom: 15px;
-        border-top: 1px solid $theme-border-color;
-    }
-    .filters-container {
-        display: flex;
-    }
-</style>
 
 <div class="page">
     <div class="title">
@@ -138,8 +111,8 @@
     {/if}
 
     <div id="notes">
-        {#each filteredNotes as note (note.id)}
-            <Note id={note.id} content={note.content} completed={note.completed} type={type}/>
+        {#each filteredNotes as note (note._id)}
+            <Note id={note._id} content={note.content} completed={note.completed} type={type}/>
         {/each}
     </div>
 
@@ -170,3 +143,30 @@
         </div>
     {/if}
 </div>
+
+<style type="text/scss">
+    @import "../theme";
+
+    .page {
+        padding: 10px;
+        margin: 10px 10px 60px;
+        display: grid;
+    }
+    .title {
+        font-size: 18px;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+    .row-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 15px;
+        margin-bottom: 15px;
+        border-top: 1px solid $theme-border-color;
+    }
+    .filters-container {
+        display: flex;
+    }
+</style>

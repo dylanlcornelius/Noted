@@ -4,10 +4,8 @@ let db;
 async function connect() {
     if (!db) {
         db = await initDb();
-        return db;
-    } else {
-        return db;
     }
+    return db;
 }
 
 export async function initDb() {
@@ -35,14 +33,14 @@ export async function initDb() {
     });
 }
 
-export async function getAllData(storeName) {
+export async function get(storeName) {
     const db = await connect();
     const store = db.transaction(storeName).objectStore(storeName);
     
     return await store.getAll();
 }
 
-export async function upsertData(storeName, data) {
+export async function upsert(storeName, data) {
     const db = await connect();
     const transaction = db.transaction(storeName, 'readwrite')
     const store = transaction.objectStore(storeName);
@@ -54,7 +52,7 @@ export async function upsertData(storeName, data) {
     });
 }
 
-export async function removeData(storeName, data) {
+export async function remove(storeName, data) {
     const db = await connect();
     const transaction = db.transaction(storeName, 'readwrite')
     const store = transaction.objectStore(storeName);

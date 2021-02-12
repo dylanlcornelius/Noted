@@ -20,6 +20,18 @@
     }
 </script>
 
+{#if editState}
+    <span class="container" on:click={handleToggleEdit}></span>
+
+    <span class="input" class:wide={editor} on:click|stopPropagation={() => {}}>
+        <TextArea bind:value={content} wrap={editor}/>
+    </span>
+{:else}
+    <span class="content" class:text={editor} on:click={handleToggleEdit}>
+        {content}
+    </span>
+{/if}
+
 <style type="text/scss">
     .content {
         padding: 6px;
@@ -45,15 +57,3 @@
         width: 100%;        
     }
 </style>
-
-{#if editState}
-    <span class="container" on:click={handleToggleEdit}></span>
-
-    <span class="input" class:wide={editor} on:click|stopPropagation={() => {}}>
-        <TextArea bind:value={content} wrap={editor}/>
-    </span>
-{:else}
-    <span class="content" class:text={editor} on:click={handleToggleEdit}>
-        {content}
-    </span>
-{/if}

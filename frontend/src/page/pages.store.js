@@ -25,7 +25,7 @@ function createPageStore() {
             }];
         }),
         updateTitle: (id, title) => update(store => {
-            const pageIndex = store.findIndex(page => page.id === id);
+            const pageIndex = store.findIndex(page => page._id === id);
             
             return [
                 ...store.slice(0, pageIndex),
@@ -35,7 +35,7 @@ function createPageStore() {
         }),
         updateDefault: (id) => update(store => {
             return store.map(page => {
-                if (page.id === id) {
+                if (page._id === id) {
                     page.default = true
                 } else {
                     page.default = false
@@ -45,7 +45,7 @@ function createPageStore() {
             });
         }),
         updateOpen: (id, open) => update(store => {
-            const pageIndex = store.findIndex(page => page.id === id);
+            const pageIndex = store.findIndex(page => page._id === id);
 
             return [
                 ...store.slice(0, pageIndex),
@@ -58,12 +58,12 @@ function createPageStore() {
             parentPageId = parentPageId ? parseInt(parentPageId) : undefined;
             oldParentPageId = oldParentPageId ? parseInt(oldParentPageId) : undefined;
 
-            const oldOrder = store.find(page => page.id === id).order;
+            const oldOrder = store.find(page => page._id === id).order;
             const isReorder = parentPageId === oldParentPageId;
             const isGreater = index > oldOrder;
 
             return store.map(page => {
-                if (page.id === id) {
+                if (page._id === id) {
                     page.order = index;
                     page.parentPage = parentPageId;
                 } else if (isReorder) {
@@ -77,9 +77,9 @@ function createPageStore() {
                     }
                 } else {
                     // move folders - adjust parent/child references
-                    if (page.id === oldParentPageId) {
+                    if (page._id === oldParentPageId) {
                         page.childPages = page.childPages.filter(childId => childId !== id);
-                    } else if (page.id === parentPageId) {
+                    } else if (page._id === parentPageId) {
                         if (!page.childPages) {
                             page.childPages = [];
                         }
@@ -100,19 +100,19 @@ function createPageStore() {
             let updatedPages = store;
             let pagesToDelete = [id];
 
-            const page = store.find(page => page.id === id);
+            const page = store.find(page => page._id === id);
             const oldParentPageId = page.parentPage;
             const oldOrder = page.order;
 
             while (pagesToDelete.length > 0) {
                 updatedPages.forEach(page => {
-                    if (page.id === pagesToDelete[0]) {
+                    if (page._id === pagesToDelete[0]) {
                         // mark children for deletion
                         if (page.childPages) {
                             pagesToDelete = pagesToDelete.concat(page.childPages);
                         }
                         // remove parent page
-                        updatedPages = updatedPages.filter(updatedPage => updatedPage.id !== pagesToDelete[0]);
+                        updatedPages = updatedPages.filter(updatedPage => updatedPage._id !== pagesToDelete[0]);
                     }
                 });
 
@@ -121,7 +121,7 @@ function createPageStore() {
 
             // update order
             return updatedPages.map(page => {
-                if (page.id === oldParentPageId) {
+                if (page._id === oldParentPageId) {
                     page.childPages = page.childPages.filter(childId => childId !== id);
                 }
                 

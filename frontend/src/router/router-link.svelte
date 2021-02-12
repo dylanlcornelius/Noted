@@ -10,6 +10,10 @@
     }
 </script>
 
+<a href={path} on:click|preventDefault={handleRedirect}>
+    <slot></slot>
+</a>
+
 <style type="text/scss">
     a {
         text-decoration: none;
@@ -19,7 +23,3 @@
         color: inherit;
     }
 </style>
-
-<a href={path} on:click|preventDefault={handleRedirect}>
-    <slot></slot>
-</a>

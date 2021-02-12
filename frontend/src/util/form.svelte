@@ -42,6 +42,38 @@
     }
 </script>
 
+<div class="form">
+    <h3>{title}</h3>
+
+    {#each fields as field}
+        <div class="field">
+            <div class="input">
+                <Input bind:value={field.value} placeholder={field.name} type={field.type}/>
+            </div>
+            {#if field.blank}
+                <div class="error">
+                    {field.name} is required
+                </div>
+            {/if}
+            {#if field.error}
+                <div class="error">
+                    {field.message}
+                </div>
+            {/if}
+        </div>
+    {/each}
+
+    <Button on:click={submit} decorated={true}>{action}</Button>
+
+    <div class="links">
+        {#each links as link}
+            <RouterLink path={link.path}>
+                <Button>{link.name}</Button>
+            </RouterLink>
+        {/each}
+    </div>
+</div>
+
 <style type="text/scss">
     @import "../theme";
 
@@ -81,35 +113,3 @@
         margin-top: 10px;
     }
 </style>
-
-<div class="form">
-    <h3>{title}</h3>
-
-    {#each fields as field}
-        <div class="field">
-            <div class="input">
-                <Input bind:value={field.value} placeholder={field.name} type={field.type}/>
-            </div>
-            {#if field.blank}
-                <div class="error">
-                    {field.name} is required
-                </div>
-            {/if}
-            {#if field.error}
-                <div class="error">
-                    {field.message}
-                </div>
-            {/if}
-        </div>
-    {/each}
-
-    <Button on:click={submit} decorated={true}>{action}</Button>
-
-    <div class="links">
-        {#each links as link}
-            <RouterLink path={link.path}>
-                <Button>{link.name}</Button>
-            </RouterLink>
-        {/each}
-    </div>
-</div>

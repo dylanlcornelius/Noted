@@ -19,11 +19,11 @@
 
     let showSubPages = hasDefault() || page.open;
 
-    $: selected = $selectedPage && page.id === $selectedPage.id;
+    $: selected = $selectedPage && page._id === $selectedPage._id;
     $: childrenPages = $pages
         ? $pages.filter(p => {
                 if (page.childPages) {
-                    return page.childPages.includes(p.id);
+                    return page.childPages.includes(p._id);
                 }
                 return false;
             }).sort((a, b) => a.order - b.order)
@@ -31,13 +31,13 @@
 
     function hasDefault() {
         let allPages = $pages;
-        let pagesToDelete = [page.id];
+        let pagesToDelete = [page._id];
 
         let hasDefault = false;
 
         while (pagesToDelete.length > 0) {
             allPages.forEach(page => {
-                if (page.id === pagesToDelete[0]) {
+                if (page._id === pagesToDelete[0]) {
                     if (page.childPages) {
                         pagesToDelete = pagesToDelete.concat(page.childPages);
                     }
@@ -53,26 +53,26 @@
     }
     function toggleSubPages() {
         showSubPages = !showSubPages;
-        pages.updateOpen(page.id, showSubPages);
+        pages.updateOpen(page._id, showSubPages);
     }
     function selectPage() {
         selectedPage.set(page);
         filter.set('ALL');
     }
     function updatePage(event) {
-        pages.updateTitle(page.id, event.detail.content);
+        pages.updateTitle(page._id, event.detail.content);
         if (selected) {
-            const newPage = $pages.find(p => p.id === page.id);
+            const newPage = $pages.find(p => p._id === page._id);
             selectedPage.set(newPage);
         }
     }
     function deletePage() {
-        if ($selectedPage && $selectedPage.id === page.id) {
+        if ($selectedPage && $selectedPage._id === page._id) {
             selectedPage.set(null);
         }
 
-        notes.deletePageNotes(page.id, $pages);
-        pages.deletePage(page.id);
+        notes.deletePageNotes(page._id, $pages);
+        pages.deletePage(page._id);
     }
 
     afterUpdate(() => {
@@ -82,44 +82,7 @@
     });
 </script>
 
-<style type="text/scss">
-    @import "../theme";
-
-    :global(.folder-icon svg) {
-        vertical-align: middle;
-    }
-    :global(.gu-mirror) {
-        color: $theme-text-color;
-    }
-    .page-container {
-        display: flex;
-        flex-direction: column;
-    }
-    .page {
-        display: flex;
-        width: 100%;
-    }
-    .sub-navigation {   
-		display: flex;
-		flex-direction: column;
-        padding-left: 10px;
-        min-height: 10px;
-	}
-    .edit-container {
-        display: flex;
-    }
-    .folder-icon {
-        width: 20px;
-    }
-    .folder-edit {
-        margin-left: 12px;
-    }
-    .drag-icon {
-        pointer-events: none;
-    }
-</style>
-
-<div class="page-container" id={page.id}>
+<div class="page-container" id={page._id}>
     <div class="page">
         {#if page.type === PageTypes.FOLDER}
             {#if $editState}
@@ -163,10 +126,47 @@
     </div>
 
     {#if showSubPages}
-        <div class="sub-navigation pages" id={page.id}>
-            {#each childrenPages as page (page.id)}
+        <div class="sub-navigation pages" id={page._id}>
+            {#each childrenPages as page (page._id)}
                 <svelte:self page={page} on:updatePage on:deletePage on:toggleShowSubPages/>
             {/each}
         </div>
     {/if}
 </div>
+
+<style type="text/scss">
+    @import "../theme";
+
+    :global(.folder-icon svg) {
+        vertical-align: middle;
+    }
+    :global(.gu-mirror) {
+        color: $theme-text-color;
+    }
+    .page-container {
+        display: flex;
+        flex-direction: column;
+    }
+    .page {
+        display: flex;
+        width: 100%;
+    }
+    .sub-navigation {   
+		display: flex;
+		flex-direction: column;
+        padding-left: 10px;
+        min-height: 10px;
+	}
+    .edit-container {
+        display: flex;
+    }
+    .folder-icon {
+        width: 20px;
+    }
+    .folder-edit {
+        margin-left: 12px;
+    }
+    .drag-icon {
+        pointer-events: none;
+    }
+</style>

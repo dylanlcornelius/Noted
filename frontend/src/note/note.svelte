@@ -26,6 +26,26 @@
     }
 </script>
 
+<div class="note" id={id}>
+    <div class="content-container" class:completed={completed}>
+        {#if type === PageTypes.TODO}
+            <Checkbox bind:value={completed} on:toggle={toggleComplete}/>
+            <TextBox content={content} editor={true} on:update={updateContent}/>
+        {/if}
+    </div>
+    {#if type === PageTypes.TODO}
+        <div class="todo-container">
+            <Button handle={true}>
+                <div class="icon drag-icon"><MdDragHandle/></div>
+            </Button>
+
+            <Button on:click={deleteNote}>
+                <div class="icon"><MdClose/></div>
+            </Button>
+        </div>
+    {/if}
+</div>
+
 <style type="text/scss">
     .note {
         display: flex;
@@ -49,23 +69,3 @@
         pointer-events: none;
     }
 </style>
-
-<div class="note" id={id}>
-    <div class="content-container" class:completed={completed}>
-        {#if type === PageTypes.TODO}
-            <Checkbox bind:value={completed} on:toggle={toggleComplete}/>
-            <TextBox content={content} editor={true} on:update={updateContent}/>
-        {/if}
-    </div>
-    {#if type === PageTypes.TODO}
-        <div class="todo-container">
-            <Button handle={true}>
-                <div class="icon drag-icon"><MdDragHandle/></div>
-            </Button>
-
-            <Button on:click={deleteNote}>
-                <div class="icon"><MdClose/></div>
-            </Button>
-        </div>
-    {/if}
-</div>

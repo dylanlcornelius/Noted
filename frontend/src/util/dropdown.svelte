@@ -11,6 +11,23 @@
     }
 </script>
 
+<div on:click={toggleVisibility}>
+    <slot></slot>
+
+    <div class="overlay" class:hide></div>
+    <div class="dropdown" class:hide>
+        <div class="dropdown-container" class:right>
+            {#each options as option}
+                <div class="option">
+                    <Button on:click={option.action}>
+                        {option.name}
+                    </Button>
+                </div>
+            {/each}
+        </div>
+    </div>
+</div>
+
 <style type="text/scss">
     @import "../theme";
 
@@ -44,20 +61,3 @@
         border-bottom: 1px solid $theme-border-alternative-color;
     }
 </style>
-
-<div on:click={toggleVisibility}>
-    <slot></slot>
-
-    <div class="overlay" class:hide></div>
-    <div class="dropdown" class:hide>
-        <div class="dropdown-container" class:right>
-            {#each options as option}
-                <div class="option">
-                    <Button on:click={option.action}>
-                        {option.name}
-                    </Button>
-                </div>
-            {/each}
-        </div>
-    </div>
-</div>

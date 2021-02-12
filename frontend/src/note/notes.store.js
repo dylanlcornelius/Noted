@@ -1,7 +1,15 @@
 import { writable, get } from 'svelte/store';
 import { generateId } from '../util/id-generator.js/';
+import middleware from '../shared/middleware.js';
 
 const id = generateId();
+
+function change(store) {
+    // only update one record not all of them
+    // how to update from a more central place?
+    middleware.update('notes', store, store.id);
+    return store;
+}
 
 function createNoteStore() {
     const { subscribe, set, update } = writable([]);
@@ -28,22 +36,22 @@ function createNoteStore() {
             ];
         }),
         updateContent: (id, content) => update(store => {
-            const noteIndex = store.findIndex(note => note.id === id);
+            const noteIndex = store.findIndex(note => note._id === id);
 
-            return [
+            return change([
                 ...store.slice(0, noteIndex),
                 {...store[noteIndex], content: content},
                 ...store.slice(noteIndex + 1)
-            ];
+            ]);
         }),
         updateOrder: (id, index, page) => update(store => {
             id = parseInt(id);
 
-            const oldOrder = store.find(note => note.id === id).order;
+            const oldOrder = store.find(note => note._id === id).order;
             const isGreater = index > oldOrder;
 
             return store.map(note => {
-                if (note.id === id) {
+                if (note._id === id) {
                     note.order = index;
                 } else if (note.page === page) {
                     if (isGreater && note.order <= index && note.order > oldOrder) {
@@ -57,7 +65,7 @@ function createNoteStore() {
             });
         }),
         toggleComplete: (id) => update(store => {
-            const noteIndex = store.findIndex(note => note.id === id);
+            const noteIndex = store.findIndex(note => note._id === id);
 
             return [
                 ...store.slice(0, noteIndex),
@@ -75,9 +83,9 @@ function createNoteStore() {
             });
         }),
         deleteNote: (id) => update(store => {
-            const oldOrder = store.find(note => note.id === id).order;
+            const oldOrder = store.find(note => note._id === id).order;
             
-            return store.filter(note => note.id !== id)
+            return store.filter(note => note._id !== id)
             .map(note => {
                 if (note.order > oldOrder) {
                     note.order--;
@@ -91,7 +99,7 @@ function createNoteStore() {
 
             while (pagesToDelete.length > 0) {
                 pages.forEach(page => {
-                    if (page.id === pagesToDelete[0]) {
+                    if (page._id === pagesToDelete[0]) {
                         // mark children for deletion
                         if (page.childPages) {
                             pageNotesToDelete = pageNotesToDelete.concat(page.childPages);

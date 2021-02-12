@@ -14,6 +14,12 @@
     }
 </script>
 
+{#if type === "password"}
+    <input type="password" placeholder={placeholder} bind:value on:keydown={add}/>
+{:else}
+    <input type="text" placeholder={placeholder} bind:value on:keydown={add}/>
+{/if}
+
 <style type="text/scss">
     @import "../theme";
 
@@ -32,9 +38,3 @@
         opacity: 0.6;
     }
 </style>
-
-{#if type === "password"}
-    <input type="password" placeholder={placeholder} bind:value on:keydown={add}/>
-{:else}
-    <input type="text" placeholder={placeholder} bind:value on:keydown={add}/>
-{/if}

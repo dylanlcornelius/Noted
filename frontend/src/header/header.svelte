@@ -10,6 +10,15 @@
     }
 </script>
 
+<div class="nav">
+    {#if $loggedIn}
+        <RouterLink path="/login" action={logout}>
+            <Button>Logout</Button>
+        </RouterLink>
+    {/if}
+</div>
+<h1>Noted</h1>
+
 <style type="text/scss">
     .nav {
         display: flex;
@@ -20,12 +29,3 @@
         margin-top: 0;
     }
 </style>
-
-<div class="nav">
-    {#if $loggedIn}
-        <RouterLink path="/login" action={logout}>
-            <Button>Logout</Button>
-        </RouterLink>
-    {/if}
-</div>
-<h1>Noted</h1>

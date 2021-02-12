@@ -10,10 +10,10 @@
     }
 </script>
 
+<input class="checkbox" type="checkbox" bind:checked={value} on:change={handleChange} />
+
 <style type="text/scss">
     .checkbox {
         margin: auto 5px;
     }
 </style>
-
-<input class="checkbox" type="checkbox" bind:checked={value} on:change={handleChange} />

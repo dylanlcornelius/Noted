@@ -17,6 +17,7 @@ export default {
 		file: 'public/bundle.js'
 	},
 	plugins: [
+		// create service worker on the fly
 		injectManifest({
 			swSrc: './sw.js',
 			swDest: './public/sw.js',

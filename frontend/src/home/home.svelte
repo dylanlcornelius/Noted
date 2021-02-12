@@ -6,6 +6,16 @@
 	import { selectedPage } from '../navigation/selected-page.store.js';
 </script>
 
+<div class="container" in:fade="{{duration: 1000}}">
+	<Navigation/>
+				
+	{#if $selectedPage}
+		<div class="page">
+			<Page id={$selectedPage._id} title={$selectedPage.title} type={$selectedPage.type}/>
+		</div>
+	{/if}
+</div>
+
 <style type="text/scss">
 	@import "../theme";
 
@@ -28,13 +38,3 @@
 		}
 	}
 </style>
-
-<div class="container" in:fade="{{duration: 1000}}">
-	<Navigation/>
-				
-	{#if $selectedPage}
-		<div class="page">
-			<Page id={$selectedPage.id} title={$selectedPage.title} type={$selectedPage.type}/>
-		</div>
-	{/if}
-</div>
